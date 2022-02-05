@@ -1,3 +1,1 @@
-<template>
-  个人中心
-</template>
+<template>个人中心</template>

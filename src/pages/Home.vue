@@ -6,7 +6,9 @@
           <img src="../assets/logo.svg" alt="" />
         </div>
         <h1>
-          <n-gradient-text :size="28" type="success"> 博客后台管理系统 </n-gradient-text>
+          <n-gradient-text :size="28" type="success">
+            博客后台管理系统
+          </n-gradient-text>
         </h1>
       </div>
       <user-avatar></user-avatar>
@@ -42,7 +44,7 @@
 <script setup>
 import { ref } from "vue";
 import menuOptions from "../utils/menu";
-import userAvatar from '../components/userAvatar.vue'
+import userAvatar from "../components/userAvatar.vue";
 const collapsed = ref(false);
 </script>
 <style lang="scss" scoped>

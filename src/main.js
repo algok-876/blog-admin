@@ -1,5 +1,6 @@
 import { createApp } from "vue";
-import { createPinia } from "pinia";
+import store from './stores';
+import { useUserStore } from './stores/user'
 import App from "./App.vue";
 import router from "./router";
 import {
@@ -16,7 +17,8 @@ import {
   NDropdown,
   NForm,
   NFormItem,
-  NInput
+  NInput,
+  NMessageProvider
 } from "naive-ui";
 
 const naive = create({
@@ -33,14 +35,13 @@ const naive = create({
     NDropdown,
     NForm,
     NFormItem,
-    NInput
+    NInput,
+    NMessageProvider
   ],
 });
-
 const app = createApp(App);
-
-app.use(createPinia());
 app.use(router);
+app.use(store);
 app.use(naive);
 
 app.mount("#app");

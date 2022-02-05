@@ -26,7 +26,7 @@ const menuOptions = [
             },
             { default: () => "后台用户" }
           ),
-        key: "user-manage-2",
+        key: "user-manage-1",
       },
       {
         label: () =>

@@ -1,7 +1,5 @@
-function getToken () {
-  return localStorage.getItem('token') || ''  
+function getToken() {
+  return localStorage.getItem("token") || "";
 }
 
-export {
-  getToken
-}
+export { getToken };
