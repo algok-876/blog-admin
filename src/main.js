@@ -1,6 +1,6 @@
 import { createApp } from "vue";
-import store from './stores';
-import { useUserStore } from './stores/user'
+import store from "./stores";
+import { useUserStore } from "./stores/user";
 import App from "./App.vue";
 import router from "./router";
 import {
@@ -18,7 +18,8 @@ import {
   NForm,
   NFormItem,
   NInput,
-  NMessageProvider
+  NMessageProvider,
+  NSelect,
 } from "naive-ui";
 
 const naive = create({
@@ -36,7 +37,8 @@ const naive = create({
     NForm,
     NFormItem,
     NInput,
-    NMessageProvider
+    NMessageProvider,
+    NSelect,
   ],
 });
 const app = createApp(App);
