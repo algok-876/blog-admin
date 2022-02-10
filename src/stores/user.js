@@ -35,7 +35,7 @@ export const useUserStore = defineStore({
       const userInfo = await this.getUserInfo()
       if (userInfo.code === 200) {
         // 能拿到用户信息表示上次已经登陆过了
-        this.userInfo = userInfo.result
+        this.userInfo = userInfo.data
         this.isLogin = true
         this.token = localStorage.getItem('token')
         return Promise.resolve(true)

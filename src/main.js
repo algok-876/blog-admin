@@ -20,6 +20,8 @@ import {
   NInput,
   NMessageProvider,
   NSelect,
+  NGrid,
+  NGridItem
 } from "naive-ui";
 
 const naive = create({
@@ -39,6 +41,8 @@ const naive = create({
     NInput,
     NMessageProvider,
     NSelect,
+    NGrid,
+    NGridItem
   ],
 });
 const app = createApp(App);
