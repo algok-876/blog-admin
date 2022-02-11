@@ -2,45 +2,49 @@
   <div id="editor"></div>
 </template>
 
-<script>
+<script setup>
 import wangEditor from "wangeditor";
-import { onMounted, onBeforeUnmount, inject } from "vue";
-export default {
-  props: {
-    height: {
-      type: Number,
-      default: 300,
-    },
+import { onMounted, onBeforeUnmount, defineProps, defineEmits, watch } from "vue";
+const props = defineProps({
+  height: {
+    type: Number,
+    default: 300,
   },
-  setup(props) {
-    let editor = null;
-    // 回调内容给父组件
-    let changeContent = inject("changeContent");
+  value: {
+    type: String
+  }
+});
 
-    function initEditor() {
-      const Editor = new wangEditor(`#editor`);
-      Editor.config.height = props.height;
-      Editor.config.onchange = (newHtml) => {
-        changeContent(newHtml);
-      };
-      // 创建编辑器
-      Editor.create();
+// 事件触发器
+const emits = defineEmits(['update:value'])
 
-      editor = Editor;
-    }
-    const clearEditor = function () {
-      editor.txt.clear();
-    };
-    onBeforeUnmount(() => {
-      editor.destroy();
-      editor = null;
-    });
-    onMounted(() => {
-      initEditor();
-    });
-    return { initEditor, changeContent, clearEditor };
-  },
-};
+let editor = null
+function initEditor() {
+  const Editor = new wangEditor(`#editor`);
+  Editor.config.height = props.height;
+  Editor.config.onchange = (newHtml) => {
+    emits('update:value', newHtml)
+  };
+  // 创建编辑器
+  Editor.create();
+
+  editor = Editor
+}
+
+watch(() => props.value, (newVal, oldVal) => {
+  if (oldVal !== '' && newVal === '') {
+    // 清空编辑器
+    editor.txt.clear()
+  }
+})
+
+onBeforeUnmount(() => {
+  editor.destroy();
+  editor = null;
+});
+onMounted(() => {
+  initEditor();
+});
 </script>
 
 <style>

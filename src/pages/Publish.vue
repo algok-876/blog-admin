@@ -26,7 +26,7 @@
       />
     </n-form-item>
     <n-form-item label="内容" path="content">
-      <editor ref="contentRef"></editor>
+      <editor v-model:value="formValue.content"></editor>
     </n-form-item>
     <n-form-item>
       <n-button @click="resetForm" attr-type="button" type="warning"
@@ -56,7 +56,6 @@ const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
 const message = useMessage();
 const formRef = ref(null);
-const contentRef = ref(null)
 let formValue = reactive({
   title: "",
   content: "",
@@ -81,17 +80,9 @@ const rules = {
   },
 };
 
-// 获取富文本编辑器组件的内容
-function changeContent(content) {
-  formValue.content = content;
-}
-provide("changeContent", changeContent);
-
-
 // 重置表单
 function resetForm() {
   Object.keys(formValue).forEach((key) => (formValue[key] = ""));
-  contentRef.value.clearEditor()
   formRef.value.restoreValidation();
 }
 

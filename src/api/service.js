@@ -26,14 +26,18 @@ service.interceptors.response.use(
   (response) => {
     const res = response.data;
     if (res.code != 200) {
-      console.log("接口信息报错", res.message);
       return Promise.reject(new Error(res.message || "Error"));
     } else {
       return res;
     }
   },
   (error) => {
+    const { response: { data: res } } = error
     console.log("接口信息报错", error);
+    if (res.code == 50346) {
+      // 缺少权限
+      window.$message.error('您缺少权限')
+    }
     return Promise.reject(error);
   }
 );
