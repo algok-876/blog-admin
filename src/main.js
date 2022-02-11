@@ -21,7 +21,8 @@ import {
   NMessageProvider,
   NSelect,
   NGrid,
-  NGridItem
+  NGridItem,
+  NDataTable 
 } from "naive-ui";
 
 const naive = create({
@@ -42,7 +43,8 @@ const naive = create({
     NMessageProvider,
     NSelect,
     NGrid,
-    NGridItem
+    NGridItem,
+    NDataTable 
   ],
 });
 const app = createApp(App);

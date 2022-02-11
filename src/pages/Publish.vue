@@ -26,28 +26,37 @@
       />
     </n-form-item>
     <n-form-item label="内容" path="content">
-      <div id="content" style="width: 100%"></div>
+      <editor ref="contentRef"></editor>
     </n-form-item>
     <n-form-item>
-      <n-button @click="resetForm" attr-type="button" type="warning">重置表单</n-button>
-      <n-button @click="handleValidateClick" attr-type="button" style="margin-left: 24px" type="primary">发布文章</n-button>
+      <n-button @click="resetForm" attr-type="button" type="warning"
+        >重置表单</n-button
+      >
+      <n-button
+        @click="handleValidateClick"
+        attr-type="button"
+        style="margin-left: 24px"
+        type="primary"
+        >发布文章</n-button
+      >
     </n-form-item>
   </n-form>
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, provide } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user";
 import { useMessage } from "naive-ui";
 import service from "@/api/service";
-import E from "wangeditor";
 import { getTags } from "@/api/index";
+import editor from "@/components/editor.vue";
 
 const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
 const message = useMessage();
 const formRef = ref(null);
+const contentRef = ref(null)
 let formValue = reactive({
   title: "",
   content: "",
@@ -72,25 +81,31 @@ const rules = {
   },
 };
 
+// 获取富文本编辑器组件的内容
+function changeContent(content) {
+  formValue.content = content;
+}
+provide("changeContent", changeContent);
+
+
 // 重置表单
 function resetForm() {
   Object.keys(formValue).forEach((key) => (formValue[key] = ""));
-  formRef.value.restoreValidation()
+  contentRef.value.clearEditor()
+  formRef.value.restoreValidation();
 }
 
 function handleValidateClick() {
-  formValue.content = editor.txt.html();
   formValue.title = formValue.title.trim();
   formValue.content = formValue.content.trim();
   if (!formValue.title) {
     message.error("标题不能为空格");
     return;
   }
-
   formRef.value.validate(async (errors) => {
     if (!errors) {
       let res = await service.post("/article/create", {
-        ...formValue.value,
+        ...formValue,
         author_id: userInfo.value._id,
       });
       resetForm();
@@ -119,12 +134,7 @@ async function initTagOptions() {
   });
 }
 
-// 富文本编辑器
-let editor = "";
 onMounted(() => {
   initTagOptions();
-  editor = new E("#content");
-  editor.config.height = 450;
-  editor.create();
 });
 </script>

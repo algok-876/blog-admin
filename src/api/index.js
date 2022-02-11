@@ -5,6 +5,12 @@ function getTags () {
   return service.get('/tag/list')
 }
 
+// 获取新闻列表
+function getArticles() {
+  return service.get('/article/list')
+}
+
 export {
-  getTags
+  getTags,
+  getArticles
 }
