@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import service from '@/api/service'
 
 // 获取标签列表
@@ -9,18 +8,6 @@ function getTags () {
 // 获取新闻列表
 function getArticles() {
   return service.get('/article/list')
-}
-
-export {
-  getTags,
-  getArticles
-}
-=======
-import service from "@/api/service";
-
-// 获取标签列表
-function getTags() {
-  return service.get("/tag/list");
 }
 
 // 获取角色列表
@@ -64,6 +51,6 @@ export {
   createRole,
   getPermissions,
   getRolePermiss,
-  modifyRolePermission
+  modifyRolePermission,
+  getArticles
 };
->>>>>>> feature/auth
