@@ -1,6 +1,8 @@
 <template>
   <div class="user-tool">
-    <n-avatar size="large" round style="marign-right: 25px">{{ userInfo.username.substr(0, 1).toUpperCase() }}</n-avatar>
+    <n-avatar size="large" round style="marign-right: 25px">{{
+      userInfo.username.substr(0, 1).toUpperCase()
+    }}</n-avatar>
     <n-dropdown :options="options" trigger="click" @select="onSelect">
       <n-button text>{{ userInfo.username }}</n-button>
     </n-dropdown>
@@ -15,12 +17,12 @@ import {
   Pencil as EditIcon,
   LogOutOutline as LogoutIcon,
 } from "@vicons/ionicons5";
-import { storeToRefs } from 'pinia'
-import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router'
-const userStore = useUserStore()
-const router = useRouter()
-const { userInfo } = storeToRefs(userStore)
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+const userStore = useUserStore();
+const router = useRouter();
+const { userInfo } = storeToRefs(userStore);
 
 const renderIcon = (icon) => {
   return () => {
@@ -54,9 +56,9 @@ function onSelect(key, options) {
     // 退出登录
     userStore.logout().then(() => {
       router.push({
-        name: 'Login'
-      })
-    })
+        name: "Login",
+      });
+    });
   } else if (key === "editProfile") {
     // 编辑用户资料
   } else {

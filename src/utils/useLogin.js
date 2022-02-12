@@ -1,7 +1,7 @@
 import { reactive, ref } from "vue";
 import { useUserStore } from "../stores/user";
-import store from '../stores'
-const userStore = useUserStore(store)
+import store from "../stores";
+const userStore = useUserStore(store);
 
 // 登录数据
 const loginModel = reactive({
@@ -33,10 +33,13 @@ function login(cb) {
   formRef.value.validate(async (errors) => {
     if (!errors) {
       try {
-        const res = await userStore.login(loginModel.email, loginModel.password)
-        cb()
+        const res = await userStore.login(
+          loginModel.email,
+          loginModel.password
+        );
+        cb();
       } catch {
-        window.$message.error('邮箱或密码错误，请检查')
+        window.$message.error("邮箱或密码错误，请检查");
       }
     }
   });
@@ -54,6 +57,6 @@ export default function () {
     loginModel,
     rules,
     login,
-    reset
+    reset,
   };
 }
