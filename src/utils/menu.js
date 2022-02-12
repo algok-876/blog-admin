@@ -6,6 +6,7 @@ import {
   PeopleOutline,
   SendOutline,
   AtSharp,
+  PersonCircleOutline
 } from "@vicons/ionicons5";
 import { NIcon } from "naive-ui";
 function renderIcon(icon) {
@@ -40,6 +41,18 @@ const menuOptions = [
         key: "user-manage-2",
       },
     ],
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: "/roles",
+        },
+        { default: () => "角色管理" }
+      ),
+    key: "role-manage",
+    icon: renderIcon(PersonCircleOutline),
   },
   {
     label: () =>
