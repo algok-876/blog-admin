@@ -10,10 +10,10 @@ export const useUserStore = defineStore({
   }),
   getters: {},
   actions: {
-    async getUserInfo () {
+    async getUserInfo() {
       const userInfo = await service.get("/user/info");
       this.userInfo = userInfo.result;
-      return Promise.resolve(userInfo)
+      return Promise.resolve(userInfo);
     },
     async login(email, password) {
       const loginResult = await service.post("/user/login", {
@@ -23,32 +23,32 @@ export const useUserStore = defineStore({
       if (loginResult.code == 200) {
         this.isLogin = true;
         this.token = loginResult.token;
-        localStorage.setItem('token', this.token)
-        await this.getUserInfo()
-        return Promise.resolve(loginResult)
+        localStorage.setItem("token", this.token);
+        await this.getUserInfo();
+        return Promise.resolve(loginResult);
       } else {
-        return Promise.reject()
+        return Promise.reject();
       }
     },
     // 自动登录
-    async autoLogin () {
-      const userInfo = await this.getUserInfo()
+    async autoLogin() {
+      const userInfo = await this.getUserInfo();
       if (userInfo.code === 200) {
         // 能拿到用户信息表示上次已经登陆过了
-        this.userInfo = userInfo.data
-        this.isLogin = true
-        this.token = localStorage.getItem('token')
-        return Promise.resolve(true)
+        this.userInfo = userInfo.data;
+        this.isLogin = true;
+        this.token = localStorage.getItem("token");
+        return Promise.resolve(true);
       }
     },
     // 用户退出登录
-    logout () {
-      this.userInfo = null
-      this.token = ''
-      localStorage.removeItem('token')
-      this.isLogin = false
-      window.$message.success('退出登录')
-      return Promise.resolve()
-    }
+    logout() {
+      this.userInfo = null;
+      this.token = "";
+      localStorage.removeItem("token");
+      this.isLogin = false;
+      window.$message.success("退出登录");
+      return Promise.resolve();
+    },
   },
 });

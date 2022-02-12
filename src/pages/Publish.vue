@@ -29,8 +29,16 @@
       <div id="content" style="width: 100%"></div>
     </n-form-item>
     <n-form-item>
-      <n-button @click="resetForm" attr-type="button" type="warning">重置表单</n-button>
-      <n-button @click="handleValidateClick" attr-type="button" style="margin-left: 24px" type="primary">发布文章</n-button>
+      <n-button @click="resetForm" attr-type="button" type="warning"
+        >重置表单</n-button
+      >
+      <n-button
+        @click="handleValidateClick"
+        attr-type="button"
+        style="margin-left: 24px"
+        type="primary"
+        >发布文章</n-button
+      >
     </n-form-item>
   </n-form>
 </template>
@@ -75,7 +83,7 @@ const rules = {
 // 重置表单
 function resetForm() {
   Object.keys(formValue).forEach((key) => (formValue[key] = ""));
-  formRef.value.restoreValidation()
+  formRef.value.restoreValidation();
 }
 
 function handleValidateClick() {

@@ -7,10 +7,10 @@ function getTitle() {
 }
 
 // 判断用户是否有权访问路由
-function hasRole (userRoles, roles) {
-  return userRoles.some(role => {
-    return roles.includes(role.code)
-  })
+function hasRole(userRoles, roles) {
+  return userRoles.some((role) => {
+    return roles.includes(role.code);
+  });
 }
 
 export { getToken, getTitle, hasRole };

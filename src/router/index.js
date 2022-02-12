@@ -7,11 +7,12 @@ import Admins from "@/pages/Admins.vue";
 import Comments from "@/pages/Comments.vue";
 import Publish from "@/pages/Publish.vue";
 import Tags from "@/pages/Tags.vue";
-import Layout from '@/pages/Layout.vue';
+import Layout from "@/pages/Layout.vue";
+import Roles from "@/pages/Roles.vue";
 import store from "@/stores";
 import { getTitle } from "@/utils/auth.js";
 import { useUserStore } from "@/stores/user";
-import { hasRole } from '@/utils/auth'
+import { hasRole } from "@/utils/auth";
 const userStore = useUserStore(store);
 
 const router = createRouter({
@@ -26,9 +27,9 @@ const router = createRouter({
       },
       children: [
         {
-          path: 'home',
-          name: 'Home',
-          component: Home
+          path: "home",
+          name: "Home",
+          component: Home,
         },
         {
           // 管理员用户
@@ -37,7 +38,7 @@ const router = createRouter({
           component: Admins,
           meta: {
             title: "管理员用户",
-            roles: ['super_admin']
+            roles: ["super_admin"],
           },
         },
         {
@@ -47,7 +48,7 @@ const router = createRouter({
           component: Users,
           meta: {
             title: "前台用户",
-            roles: ['super_admin']
+            roles: ["super_admin"],
           },
         },
         {
@@ -56,7 +57,7 @@ const router = createRouter({
           component: Articles,
           meta: {
             title: "文章管理",
-            roles: ['super_admin', 'editor', 'auditor']
+            roles: ["super_admin", "editor", "auditor"],
           },
         },
         {
@@ -65,7 +66,7 @@ const router = createRouter({
           component: Tags,
           meta: {
             title: "标签管理",
-            roles: ['super_admin', 'editor']
+            roles: ["super_admin", "editor"],
           },
         },
         {
@@ -74,7 +75,7 @@ const router = createRouter({
           component: Comments,
           meta: {
             title: "评论管理",
-            roles: ['super_admin', 'editor', 'auditor']
+            roles: ["super_admin", "editor", "auditor"],
           },
         },
         {
@@ -83,7 +84,16 @@ const router = createRouter({
           component: Publish,
           meta: {
             title: "发布文章",
-            roles: ['super_admin', 'editor']
+            roles: ["super_admin", "editor"],
+          },
+        },
+        {
+          path: "roles",
+          name: "Roles",
+          component: Roles,
+          meta: {
+            title: "角色管理",
+            roles: ["super_admin"],
           },
         },
       ],
@@ -128,21 +138,21 @@ router.beforeEach(async (to, from, next) => {
   if (to.name === "Login" && userStore.$state.isLogin) {
     // 已经登录过了
     next({
-      name: from.name
+      name: from.name,
     });
     window.$message.warning("您已经登录过了");
     return;
   }
 
   // 用户角色信息
-  const userRoles = userStore.userInfo.roles
+  const userRoles = userStore.userInfo.roles;
   if (to.meta.roles && !hasRole(userRoles, to.meta.roles)) {
     // 用户不具备某一路由的访问权限
     next({
-      name: from.name
-    })
-    window.$message.warning('你没有访问此页面的权限')
-    return
+      name: from.name,
+    });
+    window.$message.warning("你没有访问此页面的权限");
+    return;
   }
 
   // 修改网站标题

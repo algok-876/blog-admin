@@ -42,16 +42,16 @@
 
 <script setup>
 import useLogin from "../utils/useLogin";
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 const { formRef, loginModel, rules, login, reset } = useLogin();
-function onLogin () {
+function onLogin() {
   login(function () {
-    router.push(route.query.redirect || '/')
-    window.$message.success('登录成功')
-  })
+    router.push(route.query.redirect || "/");
+    window.$message.success("登录成功");
+  });
 }
 function welcome() {
   const date = new Date();

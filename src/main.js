@@ -21,7 +21,12 @@ import {
   NMessageProvider,
   NSelect,
   NGrid,
-  NGridItem
+  NGridItem,
+  NDataTable,
+  NDialogProvider,
+  NModal,
+  NCheckbox,
+  NCheckboxGroup
 } from "naive-ui";
 
 const naive = create({
@@ -42,7 +47,12 @@ const naive = create({
     NMessageProvider,
     NSelect,
     NGrid,
-    NGridItem
+    NGridItem,
+    NDataTable,
+    NDialogProvider,
+    NModal,
+    NCheckbox,
+    NCheckboxGroup
   ],
 });
 const app = createApp(App);
