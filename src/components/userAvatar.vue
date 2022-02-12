@@ -1,16 +1,16 @@
 <template>
   <div class="user-tool">
     <n-avatar size="large" round style="marign-right: 25px">{{
-      userInfo.username.substr(0, 1).toUpperCase()
+      username.substr(0, 1).toUpperCase()
     }}</n-avatar>
     <n-dropdown :options="options" trigger="click" @select="onSelect">
-      <n-button text>{{ userInfo.username }}</n-button>
+      <n-button text>{{ username }}</n-button>
     </n-dropdown>
   </div>
 </template>
 
 <script setup>
-import { h } from "vue";
+import { h, computed } from "vue";
 import { NIcon } from "naive-ui";
 import {
   PersonCircleOutline as UserIcon,
@@ -24,6 +24,12 @@ const userStore = useUserStore();
 const router = useRouter();
 const { userInfo } = storeToRefs(userStore);
 
+// 用户名首字母
+const username = computed(() => {
+  return userInfo.value ? userInfo.value.username : ''
+})
+
+console.log(userStore)
 const renderIcon = (icon) => {
   return () => {
     return h(NIcon, null, {

@@ -124,7 +124,7 @@ router.beforeEach(async (to, from, next) => {
       autoLogined = true;
     }
   }
-  if (to.name !== "Login" && !userStore.$state.isLogin) {
+  if (to.name !== "Login" && !userStore.isLogin) {
     // 还未登录
     next({
       name: "Login",
@@ -135,7 +135,7 @@ router.beforeEach(async (to, from, next) => {
     window.$message.warning("您还未登录");
     return;
   }
-  if (to.name === "Login" && userStore.$state.isLogin) {
+  if (to.name === "Login" && userStore.isLogin) {
     // 已经登录过了
     next({
       name: from.name,
@@ -144,17 +144,20 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
-  // 用户角色信息
-  const userRoles = userStore.userInfo.roles;
-  if (to.meta.roles && !hasRole(userRoles, to.meta.roles)) {
-    // 用户不具备某一路由的访问权限
-    next({
-      name: from.name,
-    });
-    window.$message.warning("你没有访问此页面的权限");
-    return;
+  if (userStore.isLogin && userStore.userInfo) {
+    console.log(123)
+    // 用户角色信息
+    const userRoles = userStore.userInfo.roles;
+    if (to.meta.roles && !hasRole(userRoles, to.meta.roles)) {
+      // 用户不具备某一路由的访问权限
+      next({
+        name: from.name,
+      });
+      window.$message.warning("你没有访问此页面的权限");
+      return;
+    }
   }
-
+  
   // 修改网站标题
   let title = to.meta.title ? `${to.meta.title} - ${getTitle()}` : getTitle();
   document.title = title;

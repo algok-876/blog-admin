@@ -12,7 +12,8 @@ export const useUserStore = defineStore({
   actions: {
     async getUserInfo() {
       const userInfo = await service.get("/user/info");
-      this.userInfo = userInfo.result;
+      this.userInfo = userInfo.data;
+      console.log(this.userInfo)
       return Promise.resolve(userInfo);
     },
     async login(email, password) {
