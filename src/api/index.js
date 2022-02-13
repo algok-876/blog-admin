@@ -1,16 +1,25 @@
 import service from '@/api/service'
 
 // 获取标签列表
-function getTags () {
+function getTags() {
   return service.get('/tag/list')
 }
 
-// 获取新闻列表
-function getArticles() {
-  return service.get('/article/list')
+// 获取文章列表
+function getArticles(page, stateTime, endTime) {
+  return service.get('/article/list', {
+    params: { page: page, startTime: stateTime, endTime: endTime }
+  })
 }
 
-export {
-  getTags,
-  getArticles
+// 获取文章详情
+function getArticleDetail(id) {
+  return service.get('/article/detail/' + id)
 }
+
+// 删除文章
+function delArticle(id) {
+  return service.post('/article/delete/' + id)
+}
+
+export { getTags, getArticles, getArticleDetail, delArticle }

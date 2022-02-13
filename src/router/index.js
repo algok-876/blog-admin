@@ -3,6 +3,7 @@ import Home from "@/pages/Home.vue";
 import Users from "@/pages/Users.vue";
 import Login from "@/pages/Login.vue";
 import Articles from "@/pages/Articles.vue";
+import ArticleUpdata from "@/pages/ArticleUpdata.vue";
 import Admins from "@/pages/Admins.vue";
 import Comments from "@/pages/Comments.vue";
 import Publish from "@/pages/Publish.vue";
@@ -47,6 +48,14 @@ const router = createRouter({
           component: Articles,
           meta: {
             title: "文章管理",
+          },
+        },
+        {
+          path: "article/:id",
+          name: "articleUpdata",
+          component: ArticleUpdata,
+          meta: {
+            title: "修改文章",
           },
         },
         {

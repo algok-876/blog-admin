@@ -22,7 +22,12 @@ import {
   NSelect,
   NGrid,
   NGridItem,
-  NDataTable 
+  NDataTable,
+  NPagination,
+  NModal,
+  NSpace,
+  NDatePicker,
+  NDialogProvider
 } from "naive-ui";
 
 const naive = create({
@@ -44,7 +49,12 @@ const naive = create({
     NSelect,
     NGrid,
     NGridItem,
-    NDataTable 
+    NDataTable,
+    NPagination,
+    NModal,
+    NSpace,
+    NDatePicker,
+    NDialogProvider
   ],
 });
 const app = createApp(App);

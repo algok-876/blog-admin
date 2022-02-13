@@ -1,6 +1,7 @@
 <template></template>
 
 <script setup>
-import { useMessage } from 'naive-ui'
+import { useMessage, useDialog } from 'naive-ui'
 window.$message = useMessage()
+window.$dialog = useDialog()
 </script>
