@@ -152,9 +152,8 @@ const onUpdata = function (row) {
   router.push({ name: "articleUpdata", params: { id: row._id } });
 };
 const onDelete = async function (row, index) {
-  window.$dialog.warning({
-    title: "警告",
-    content: "你确定？",
+  window.$dialog.error({
+    content: "确认删除这条文章",
     positiveText: "确定",
     negativeText: "取消",
     onPositiveClick: async () => {
