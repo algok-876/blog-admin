@@ -3,7 +3,6 @@ import Home from "@/pages/Home.vue";
 import Users from "@/pages/Users.vue";
 import Login from "@/pages/Login.vue";
 import Articles from "@/pages/Articles.vue";
-import ArticleUpdata from "@/pages/ArticleUpdata.vue";
 import Admins from "@/pages/Admins.vue";
 import Comments from "@/pages/Comments.vue";
 import Publish from "@/pages/Publish.vue";
