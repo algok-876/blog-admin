@@ -4,39 +4,50 @@
 
 <script setup>
 import wangEditor from "wangeditor";
-import { onMounted, onBeforeUnmount, defineProps, defineEmits, watch } from "vue";
+import {
+  onMounted,
+  onBeforeUnmount,
+  defineProps,
+  defineEmits,
+  watch,
+} from "vue";
 const props = defineProps({
   height: {
     type: Number,
     default: 300,
   },
   value: {
-    type: String
-  }
+    type: String,
+  },
 });
 
 // 事件触发器
-const emits = defineEmits(['update:value'])
+const emits = defineEmits(["update:value"]);
 
-let editor = null
+let editor = null;
 function initEditor() {
   const Editor = new wangEditor(`#editor`);
   Editor.config.height = props.height;
   Editor.config.onchange = (newHtml) => {
-    emits('update:value', newHtml)
+    emits("update:value", newHtml);
   };
   // 创建编辑器
   Editor.create();
 
-  editor = Editor
+  editor = Editor;
 }
 
-watch(() => props.value, (newVal, oldVal) => {
-  if (oldVal !== '' && newVal === '') {
-    // 清空编辑器
-    editor.txt.clear()
+watch(
+  () => props.value,
+  (newVal, oldVal) => {
+    if (oldVal !== "" && newVal === "") {
+      // 清空编辑器
+      editor.txt.clear();
+    } else if (oldVal === "" && newVal) {
+      editor.txt.html(newVal);
+    }
   }
-})
+);
 
 onBeforeUnmount(() => {
   editor.destroy();

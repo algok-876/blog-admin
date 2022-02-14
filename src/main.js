@@ -26,7 +26,10 @@ import {
   NDialogProvider,
   NModal,
   NCheckbox,
-  NCheckboxGroup
+  NCheckboxGroup,
+  NPagination,
+  NSpace,
+  NDatePicker
 } from "naive-ui";
 
 const naive = create({
@@ -52,7 +55,10 @@ const naive = create({
     NDialogProvider,
     NModal,
     NCheckbox,
-    NCheckboxGroup
+    NCheckboxGroup,
+    NPagination,
+    NSpace,
+    NDatePicker
   ],
 });
 const app = createApp(App);
