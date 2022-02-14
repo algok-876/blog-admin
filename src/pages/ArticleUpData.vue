@@ -43,7 +43,6 @@
   </n-form>
 </template>
 
-
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import service from "@/api/service";

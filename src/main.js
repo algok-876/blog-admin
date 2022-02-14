@@ -29,7 +29,7 @@ import {
   NCheckboxGroup,
   NPagination,
   NSpace,
-  NDatePicker
+  NDatePicker,
 } from "naive-ui";
 
 const naive = create({
@@ -58,7 +58,7 @@ const naive = create({
     NCheckboxGroup,
     NPagination,
     NSpace,
-    NDatePicker
+    NDatePicker,
   ],
 });
 const app = createApp(App);

@@ -154,7 +154,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (userStore.isLogin && userStore.userInfo) {
-    console.log(123)
+    console.log(123);
     // 用户角色信息
     const userRoles = userStore.userInfo.roles;
     if (to.meta.roles && !hasRole(userRoles, to.meta.roles)) {
@@ -166,7 +166,7 @@ router.beforeEach(async (to, from, next) => {
       return;
     }
   }
-  
+
   // 修改网站标题
   let title = to.meta.title ? `${to.meta.title} - ${getTitle()}` : getTitle();
   document.title = title;

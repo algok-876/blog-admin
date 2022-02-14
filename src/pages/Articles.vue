@@ -24,7 +24,12 @@
     </n-grid>
   </n-space>
   <div class="article-list">
-    <n-data-table :columns="columns" :data="articleList" :bordered="false" />
+    <n-data-table
+      :columns="columns"
+      :data="articleList"
+      :single-line="false"
+      :scroll-x="1600"
+    />
     <n-space :style="{ marginTop: '10px' }" justify="left">
       <n-pagination
         v-model:page="page"
@@ -110,8 +115,23 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
       key: "author.username",
     },
     {
-      title: "日期",
+      title: "创建日期",
+      key: "create_at",
+      sorter: {
+        compare: (a, b) => new Date(a.create_at) - new Date(b.create_at),
+        multiple: 1,
+      },
+      render(row) {
+        return dateToString(row.create_at);
+      },
+    },
+    {
+      title: "更改日期",
       key: "update_at",
+      sorter: {
+        compare: (a, b) => new Date(a.update_at) - new Date(b.update_at),
+        multiple: 2,
+      },
       render(row) {
         return dateToString(row.update_at);
       },
@@ -119,6 +139,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
     {
       title: "操作",
       key: "actions",
+      fixed: "right",
       render(row, index) {
         return [
           h(
@@ -174,7 +195,7 @@ const onUpdata = function (row) {
 };
 const onDelete = async function (row, index) {
   window.$dialog.warning({
-    title: '确认删除',
+    title: "确认删除",
     content: "请确认是否删除这条文章",
     positiveText: "删除",
     negativeText: "不确定",
@@ -213,7 +234,7 @@ async function initArticleList(
     startTime,
     endTime,
     keyword,
-    limit
+    limit,
   });
   articleList.value = result.data;
   pageCount.value = result.pageCount;
@@ -221,19 +242,25 @@ async function initArticleList(
 
 // page发生改变时调用
 function updatePage() {
-  const { startTime, endTime } = filterDate()
-  initArticleList(page.value, pageSize.value , startTime, endTime, keyword.value);
+  const { startTime, endTime } = filterDate();
+  initArticleList(
+    page.value,
+    pageSize.value,
+    startTime,
+    endTime,
+    keyword.value
+  );
 }
 
-function updatePageSize (size) {
-  pageSize.value = size
-  updatePage()
+function updatePageSize(size) {
+  pageSize.value = size;
+  updatePage();
 }
 
 // 清除关键字
-function clearKeyword () {
-  keyword.value = ''
-  filterArticle()
+function clearKeyword() {
+  keyword.value = "";
+  filterArticle();
 }
 
 // 浏览文章详情
@@ -243,7 +270,7 @@ const dateRange = ref(null);
 const keyword = ref("");
 
 // 获取时间关键字
-function filterDate () {
+function filterDate() {
   let startTime, endTime;
   if (!dateRange.value) {
     startTime = 0;
@@ -252,14 +279,20 @@ function filterDate () {
     startTime = dateRange.value[0];
     endTime = dateRange.value[1];
   }
-  return { startTime, endTime }
+  return { startTime, endTime };
 }
 
 // 根据日期或者关键字筛选文章数据
 function filterArticle() {
-  const { startTime, endTime } = filterDate()
+  const { startTime, endTime } = filterDate();
   page.value = 1;
-  initArticleList(page.value, pageSize.value , startTime, endTime, keyword.value);
+  initArticleList(
+    page.value,
+    pageSize.value,
+    startTime,
+    endTime,
+    keyword.value
+  );
 }
 
 onMounted(() => {
@@ -267,7 +300,7 @@ onMounted(() => {
 });
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .search-btn {
   cursor: pointer;
 }

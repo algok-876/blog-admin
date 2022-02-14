@@ -13,7 +13,7 @@ export const useUserStore = defineStore({
     async getUserInfo() {
       const userInfo = await service.get("/user/info");
       this.userInfo = userInfo.data;
-      console.log(this.userInfo)
+      console.log(this.userInfo);
       return Promise.resolve(userInfo);
     },
     async login(email, password) {

@@ -6,7 +6,7 @@ import {
   PeopleOutline,
   SendOutline,
   AtSharp,
-  PersonCircleOutline
+  PersonCircleOutline,
 } from "@vicons/ionicons5";
 import { NIcon } from "naive-ui";
 function renderIcon(icon) {

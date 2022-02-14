@@ -26,10 +26,10 @@ const { userInfo } = storeToRefs(userStore);
 
 // 用户名首字母
 const username = computed(() => {
-  return userInfo.value ? userInfo.value.username : ''
-})
+  return userInfo.value ? userInfo.value.username : "";
+});
 
-console.log(userStore)
+console.log(userStore);
 const renderIcon = (icon) => {
   return () => {
     return h(NIcon, null, {

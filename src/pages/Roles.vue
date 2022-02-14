@@ -48,13 +48,13 @@
     negative-text="取消"
     style="width: 600px"
   >
-  <n-checkbox-group v-model:value="mPermissionCodes">
-    <n-grid x-gap="20" y-gap="10" :cols="5">
-      <n-gi v-for="permission in data.permission" :key="permission.code">
-        <n-checkbox :value="permission.code" :label="permission.name"/>
-      </n-gi>
-    </n-grid>
-  </n-checkbox-group>
+    <n-checkbox-group v-model:value="mPermissionCodes">
+      <n-grid x-gap="20" y-gap="10" :cols="5">
+        <n-gi v-for="permission in data.permission" :key="permission.code">
+          <n-checkbox :value="permission.code" :label="permission.name" />
+        </n-gi>
+      </n-grid>
+    </n-checkbox-group>
   </n-modal>
 </template>
 
@@ -65,7 +65,7 @@ import {
   createRole,
   getPermissions,
   getRolePermiss,
-  modifyRolePermission
+  modifyRolePermission,
 } from "@/api";
 import { reactive, onMounted, h, ref } from "vue";
 import { NButton, NPopconfirm } from "naive-ui";
@@ -75,12 +75,12 @@ const data = reactive({
   roleList: [],
   permission: [],
   rolePermission: [],
-  curOperateRole: ''
+  curOperateRole: "",
 });
 const showRoleModal = ref(false);
 const showPermissionModal = ref(false);
 const formRef = ref(null);
-const mPermissionCodes = ref([])
+const mPermissionCodes = ref([]);
 
 const roleModel = reactive({
   name: "",
@@ -163,23 +163,23 @@ const createColumns = ({ showModifyModel, remove }) => {
 
 // 显示模态框
 async function showModifyModel(row) {
-  data.curOperateRole = row._id
+  data.curOperateRole = row._id;
   showPermissionModal.value = true;
   // 获取角色拥有的权限
-  const res = await getRolePermiss(row._id)
-  data.rolePermission = res.data
-  mPermissionCodes.value = res.data.map(x => x.code)
+  const res = await getRolePermiss(row._id);
+  data.rolePermission = res.data;
+  mPermissionCodes.value = res.data.map((x) => x.code);
 }
 
 // 调整角色权限
 async function modifyPermission() {
   // 权限 code 请求参数
-  const permissionCodes = Object.values(mPermissionCodes.value).join(',')
+  const permissionCodes = Object.values(mPermissionCodes.value).join(",");
   const res = await modifyRolePermission({
     roleId: data.curOperateRole,
-    permissionCodes
-  })
-  window.$message.success(res.message)
+    permissionCodes,
+  });
+  window.$message.success(res.message);
 }
 
 // 删除角色
