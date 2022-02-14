@@ -6,9 +6,9 @@ function getTags() {
 }
 
 // 获取文章列表
-function getArticles(page, stateTime, endTime) {
+function getArticles(options) {
   return service.get('/article/list', {
-    params: { page: page, startTime: stateTime, endTime: endTime }
+    params: options
   })
 }
 

@@ -1,19 +1,39 @@
 <template>
-  <n-space justify="end" style="margin-bottom: 15px" class="header">
-    <n-date-picker
-      type="datetimerange"
-      clearable
-      :default-time="['00:00:00', '23:59:59']"
-      @update:value="changeDate"
-    />
+  <n-space justify="left" style="margin-bottom: 15px" class="header">
+    <n-grid x-gap="20" :cols="2">
+      <n-gi>
+        <n-input
+          placeholder="搜索关键字"
+          v-model:value="keyword"
+          clearable
+          @clear="clearKeyword"
+          @keydown.enter="filterArticle"
+        ></n-input>
+      </n-gi>
+      <n-gi>
+        <n-date-picker
+          start-placeholder="选择开始日期"
+          end-placeholder="选择结束日期"
+          type="datetimerange"
+          clearable
+          v-model:value="dateRange"
+          :default-time="['00:00:00', '23:59:59']"
+          @update:value="filterArticle"
+        />
+      </n-gi>
+    </n-grid>
   </n-space>
   <div class="article-list">
     <n-data-table :columns="columns" :data="articleList" :bordered="false" />
-    <n-space :style="{ marginTop: '10px' }" justify="center">
+    <n-space :style="{ marginTop: '10px' }" justify="left">
       <n-pagination
         v-model:page="page"
+        v-model:page-size="pageSize"
         :page-count="pageCount"
-        @update:page="changePage"
+        show-size-picker
+        :page-sizes="[5, 10, 15, 20]"
+        @update:page="updatePage"
+        @update:page-size="updatePageSize"
       />
     </n-space>
   </div>
@@ -53,6 +73,7 @@ import { NTag, NButton } from "naive-ui";
 import { dateToString, handleDetailTime } from "@/utils/tool.js";
 import { useRouter } from "vue-router";
 const router = useRouter();
+// 文章列表
 let articleList = ref([]);
 const createColumns = ({ onDetail, onUpdata, onDelete }) => {
   return [
@@ -130,7 +151,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
             NButton,
             {
               onClick: () => onDelete(row, index),
-              type: "error",
+              type: "warning",
               style: {
                 marginRight: "3px",
               },
@@ -176,31 +197,70 @@ const columns = createColumns({
 // 分页
 const page = ref(1);
 const pageCount = ref(0);
-function changePage(nowPage) {
-  initArticleList(nowPage, stateTime.value, endTime.value);
-}
-async function initArticleList(page = 1, stateTime = 0, endTime = Date.now()) {
-  let result = await getArticles(page, stateTime, endTime);
+const pageSize = ref(5);
+
+// 获取文章数据
+async function initArticleList(
+  page = 1,
+  limit = pageSize.value,
+  startTime = 0,
+  endTime = Date.now(),
+  keyword
+) {
+  let result = await getArticles({
+    page,
+    startTime,
+    endTime,
+    keyword,
+    limit
+  });
   articleList.value = result.data;
   pageCount.value = result.pageCount;
 }
-// 浏览新闻详情
+
+// page发生改变时调用
+function updatePage() {
+  const { startTime, endTime } = filterDate()
+  initArticleList(page.value, pageSize.value , startTime, endTime, keyword.value);
+}
+
+function updatePageSize (size) {
+  pageSize.value = size
+  updatePage()
+}
+
+// 清除关键字
+function clearKeyword () {
+  keyword.value = ''
+  filterArticle()
+}
+
+// 浏览文章详情
 const showModal = ref(false);
 const detailData = ref({});
-const stateTime = ref(0);
-const endTime = ref(Date.now());
-// 筛选时间内容
-function changeDate(time) {
-  if (time) {
-    stateTime.value = time[0];
-    endTime.value = time[1];
+const dateRange = ref(null);
+const keyword = ref("");
+
+// 获取时间关键字
+function filterDate () {
+  let startTime, endTime;
+  if (!dateRange.value) {
+    startTime = 0;
+    endTime = Date.now();
   } else {
-    stateTime.value = 0;
-    endTime.value = Date.now();
+    startTime = dateRange.value[0];
+    endTime = dateRange.value[1];
   }
-  page.value = 1;
-  initArticleList(1, stateTime.value, endTime.value);
+  return { startTime, endTime }
 }
+
+// 根据日期或者关键字筛选文章数据
+function filterArticle() {
+  const { startTime, endTime } = filterDate()
+  page.value = 1;
+  initArticleList(page.value, pageSize.value , startTime, endTime, keyword.value);
+}
+
 onMounted(() => {
   initArticleList();
 });
