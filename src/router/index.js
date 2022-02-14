@@ -62,11 +62,12 @@ const router = createRouter({
           },
         },
         {
-          path: "article/:id",
-          name: "articleUpdata",
-          component: ArticleUpdata,
+          path: "article/update/:id",
+          name: "ArticleUpdata",
+          component: Publish,
           meta: {
-            title: "修改文章",
+            title: "修改文章信息",
+            roles: ["super_admin", "editor"],
           },
         },
         {

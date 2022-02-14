@@ -126,7 +126,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
       },
     },
     {
-      title: "更改日期",
+      title: "最近更新日期",
       key: "update_at",
       sorter: {
         compare: (a, b) => new Date(a.update_at) - new Date(b.update_at),
@@ -191,7 +191,7 @@ const onDetail = function (row) {
   showModal.value = true;
 };
 const onUpdata = function (row) {
-  router.push({ name: "articleUpdata", params: { id: row._id } });
+  router.push({ name: "ArticleUpdata", params: { id: row._id } });
 };
 const onDelete = async function (row, index) {
   window.$dialog.warning({

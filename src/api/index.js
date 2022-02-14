@@ -12,9 +12,18 @@ function getArticles(options) {
   });
 }
 
+function createArticle (options) {
+  return service.post("/article/create", options);
+}
+
 // 获取文章详情
 function getArticleDetail(id) {
   return service.get("/article/detail/" + id);
+}
+
+// 更新文章数据
+function updateArticle (id, options) {
+  return service.post(`/article/update/${id}`, options)
 }
 
 // 删除文章
@@ -67,4 +76,6 @@ export {
   getPermissions,
   getRolePermiss,
   modifyRolePermission,
+  updateArticle,
+  createArticle
 };

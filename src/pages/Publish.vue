@@ -29,33 +29,58 @@
       <editor v-model:value="formValue.content"></editor>
     </n-form-item>
     <n-form-item>
-      <n-button @click="resetForm" attr-type="button" type="warning"
+      <n-button @click="resetForm" type="warning" v-if="!isEdit"
         >重置表单</n-button
       >
+      <n-button @click="back" type="default" v-else>想通了, 不改了</n-button>
       <n-button
         @click="handleValidateClick"
-        attr-type="button"
         style="margin-left: 24px"
         type="primary"
-        >发布文章</n-button
+        >{{ isEdit ? "更新文章" : "发布文章" }}</n-button
       >
     </n-form-item>
   </n-form>
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, provide } from "vue";
+import { ref, onMounted, reactive, provide, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user";
 import { useMessage } from "naive-ui";
+import { useRoute, useRouter } from "vue-router";
 import service from "@/api/service";
-import { getTags } from "@/api/index";
+import {
+  getTags,
+  getArticleDetail,
+  updateArticle,
+  createArticle,
+} from "@/api/index";
 import editor from "@/components/editor.vue";
+// 路由对象
+const route = useRoute();
+const router = useRouter();
 
+// 用户全局状态数据
 const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
 const message = useMessage();
 const formRef = ref(null);
+
+// 当前模式 publish or edit
+const isEdit = computed(() => {
+  return !!route.params.id;
+});
+
+// 观察路径的改变，路径改变代表模式的改变
+watch(
+  () => route.path,
+  (newVal, oldVal) => {
+    resetForm();
+  }
+);
+
+// 表单数据
 let formValue = reactive({
   title: "",
   content: "",
@@ -86,6 +111,14 @@ function resetForm() {
   formRef.value.restoreValidation();
 }
 
+// 返回到文章列表页
+function back() {
+  router.push({
+    name: "Articles",
+  });
+}
+
+// 处理表单提交
 function handleValidateClick() {
   formValue.title = formValue.title.trim();
   formValue.content = formValue.content.trim();
@@ -95,10 +128,22 @@ function handleValidateClick() {
   }
   formRef.value.validate(async (errors) => {
     if (!errors) {
-      let res = await service.post("/article/create", {
-        ...formValue,
-        author_id: userInfo.value._id,
-      });
+      let res = null;
+      if (isEdit.value) {
+        // 编辑模式下 调用修改文章信息接口
+        console.log(route.params.id);
+        res = await updateArticle(route.params.id, {
+          ...formValue,
+        });
+        router.push({
+          name: "Articles",
+        });
+      } else {
+        res = await createArticle({
+          ...formValue,
+          author_id: userInfo.value._id,
+        });
+      }
       resetForm();
       message.success(res.message);
     } else {
@@ -125,7 +170,20 @@ async function initTagOptions() {
   });
 }
 
+// 编辑模式下需要获取需要修改的文章的数据
+async function getArticle() {
+  const id = route.params.id;
+  const res = await getArticleDetail(id);
+  Object.keys(res.data).forEach((key) => {
+    formValue[key] = res.data[key];
+  });
+}
+
 onMounted(() => {
   initTagOptions();
+  // 编辑模式下需要获取文章数据
+  if (isEdit.value) {
+    getArticle();
+  }
 });
 </script>
