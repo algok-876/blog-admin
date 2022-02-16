@@ -1,8 +1,23 @@
 import service from "@/api/service";
 
 // 获取标签列表
-function getTags() {
-  return service.get("/tag/list");
+function getTags(options) {
+  return service.get("/tag/list", {params: options});
+}
+
+// 创建标签
+function createTag(options) {
+  return service.post("/tag/create", options)
+}
+
+// 删除标签
+function deleteTag(id) {
+  return service.post(`/tag/delete/${id}`)
+}
+
+// 更改标签
+function updataTag(id, options) {
+  return service.post(`/tag/update/${id}`, options)
 }
 
 // 获取文章列表
@@ -67,6 +82,9 @@ function modifyRolePermission(options) {
 
 export {
   getTags,
+  deleteTag,
+  createTag,
+  updataTag,
   getArticles,
   getArticleDetail,
   delArticle,
@@ -77,5 +95,5 @@ export {
   getRolePermiss,
   modifyRolePermission,
   updateArticle,
-  createArticle
+  createArticle,
 };
