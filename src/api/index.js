@@ -80,6 +80,21 @@ function articleCountMonth() {
   return service.get("/article/month")
 }
 
+// 获取访问人数数据
+function visitCount() {
+  return service.get("/visit/count")
+}
+
+// 获取近7天的访问人数数据
+function visitCountWeek() {
+  return service.get("/visit/week")
+}
+
+// 获取近30天的访问人数数据
+function visitCountMonth() {
+  return service.get("/visit/month")
+}
+
 export {
   getTags,
   getArticles,
@@ -95,5 +110,8 @@ export {
   createArticle,
   articleCount,
   articleCountWeek,
-  articleCountMonth
+  articleCountMonth,
+  visitCount,
+  visitCountWeek,
+  visitCountMonth
 };

@@ -3,19 +3,15 @@
     <n-grid class="info" x-gap="15" :cols="5">
       <n-gi>
         <dataCard
-          :title="'文章总数'"
-          :count="allCount.article.count"
-          :today="allCount.article.today"
-          :icon="Book"
-        ></dataCard>
+          :option="allCount.article"
+          v-model:article-chart="chartActile"
+        />
       </n-gi>
       <n-gi>
         <dataCard
-          :title="'访问总数'"
-          :count="allCount.visit.count"
-          :today="allCount.visit.today"
-          :icon="Person"
-        ></dataCard>
+          :option="allCount.visit"
+          v-model:article-chart="chartActile"
+        />
       </n-gi>
     </n-grid>
     <div class="chart-title">
@@ -43,6 +39,9 @@ import {
   articleCountWeek,
   articleCountMonth,
   articleCount,
+  visitCount,
+  visitCountWeek,
+  visitCountMonth,
 } from "@/api/index.js";
 import chart from "@/components/chart.vue";
 import dataCard from "@/components/dataCard.vue";
@@ -64,22 +63,31 @@ let timeOptions = [
 let chartActile = ref("article");
 let allCount = reactive({
   article: {
-    count: 0,
-    today: 0,
-    yesterday: 0,
+    title: "文章总数",
+    chart: "article",
+    data: {
+      count: 0,
+      today: 0,
+      yesterday: 0,
+    },
+    icon: Book,
   },
   visit: {
-    count: 0,
-    today: 0,
-    yesterday: 0,
+    title: "访问总数",
+    chart: "visit",
+    data: {
+      count: 0,
+      today: 0,
+      yesterday: 0,
+    },
+    icon: Person,
   },
 });
 
 async function initArticleCount() {
   let result = await articleCount();
-  allCount.article = result.data;
+  allCount.article.data = result.data;
 }
-
 // 获取近7天的数据
 async function initArticleWeek() {
   let result = await articleCountWeek();
@@ -103,22 +111,59 @@ function initArticleChart() {
     initArticleMonth();
   }
 }
+
+async function initVisitCount() {
+  let result = await visitCount();
+  allCount.visit.data = result.data;
+}
+// 获取近7天访问人数的数据
+async function initVisitWeek() {
+  let result = await visitCountWeek();
+  data.value = result.data;
+  labels.value = result.labels;
+  ChartTitle.value = "近7天访问人数量";
+  // console.log(result);
+}
+// 获取近30天访问人数的数据
+async function initVisitMonth() {
+  let result = await visitCountMonth();
+  data.value = result.data;
+  labels.value = result.labels;
+  ChartTitle.value = "近30天访问人数量";
+  // console.log(result);
+}
+function initVisitChart() {
+  if (time.value === 7) {
+    initVisitWeek();
+  } else if (time.value === 30) {
+    initVisitMonth();
+  }
+}
+
 function inintChart() {
   switch (chartActile.value) {
     case "article":
       initArticleChart();
+      break;
+    case "visit":
+      initVisitChart();
       break;
     default:
       initArticleChart();
       break;
   }
 }
-watch(time, () => {
-  inintChart();
-});
+watch(
+  () => [time.value, chartActile.value],
+  () => {
+    console.log(chartActile.value)
+    inintChart();
+  }
+);
 onMounted(() => {
   initArticleCount();
   inintChart();
+  initVisitCount();
 });
 </script>
 
@@ -147,9 +192,6 @@ onMounted(() => {
       .count {
         font-size: 23px;
       }
-    }
-    .data-card-active {
-      background: #e7f5ee;
     }
   }
   .chart-title {
