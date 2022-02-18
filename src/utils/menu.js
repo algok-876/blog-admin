@@ -7,6 +7,7 @@ import {
   SendOutline,
   AtSharp,
   PersonCircleOutline,
+  BarChart
 } from "@vicons/ionicons5";
 import { NIcon } from "naive-ui";
 function renderIcon(icon) {
@@ -41,6 +42,18 @@ const menuOptions = [
         key: "user-manage-2",
       },
     ],
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: "/dashboard",
+        },
+        { default: () => "仪表盘" }
+      ),
+    key: "dashboard-manage",
+    icon: renderIcon(BarChart),
   },
   {
     label: () =>

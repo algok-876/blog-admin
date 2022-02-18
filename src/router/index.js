@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/pages/Home.vue";
 import Users from "@/pages/Users.vue";
 import Login from "@/pages/Login.vue";
+import Dashboard from "@/pages/Dashboard.vue";
 import Articles from "@/pages/Articles.vue";
 import Admins from "@/pages/Admins.vue";
 import Comments from "@/pages/Comments.vue";
@@ -48,6 +49,16 @@ const router = createRouter({
           component: Users,
           meta: {
             title: "前台用户",
+            roles: ["super_admin"],
+          },
+        },
+        {
+          // 仪表盘
+          path: "dashboard",
+          name: "Dashboard",
+          component: Dashboard,
+          meta: {
+            title: "仪表盘",
             roles: ["super_admin"],
           },
         },

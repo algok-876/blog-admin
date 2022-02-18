@@ -65,6 +65,21 @@ function modifyRolePermission(options) {
   return service.post("/role/permission", options);
 }
 
+// 获取文章数据
+function articleCount() {
+  return service.get("/article/count")
+}
+
+// 获取近7天的文章数量
+function articleCountWeek() {
+  return service.get("/article/week")
+}
+
+// 获取近30天的文章数量
+function articleCountMonth() {
+  return service.get("/article/month")
+}
+
 export {
   getTags,
   getArticles,
@@ -77,5 +92,8 @@ export {
   getRolePermiss,
   modifyRolePermission,
   updateArticle,
-  createArticle
+  createArticle,
+  articleCount,
+  articleCountWeek,
+  articleCountMonth
 };

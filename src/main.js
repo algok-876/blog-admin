@@ -30,6 +30,7 @@ import {
   NPagination,
   NSpace,
   NDatePicker,
+  NNumberAnimation
 } from "naive-ui";
 
 const naive = create({
@@ -59,6 +60,7 @@ const naive = create({
     NPagination,
     NSpace,
     NDatePicker,
+    NNumberAnimation
   ],
 });
 const app = createApp(App);
