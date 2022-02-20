@@ -39,6 +39,8 @@ service.interceptors.response.use(
     if (res.code == 50346) {
       // 缺少权限
       window.$message.error("您缺少权限");
+    } else {
+      window.$message.error(res.message);
     }
     return Promise.reject(error);
   }
