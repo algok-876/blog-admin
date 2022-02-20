@@ -3,7 +3,7 @@ function getToken() {
 }
 
 function getTitle() {
-  return "Vite App";
+  return "博客后台管理系统";
 }
 
 // 判断用户是否有权访问路由

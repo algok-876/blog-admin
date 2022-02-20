@@ -15,6 +15,18 @@ function renderIcon(icon) {
 }
 const menuOptions = [
   {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: "/dashboard",
+        },
+        { default: () => "仪表盘" }
+      ),
+    key: "dashboard-manage",
+    icon: renderIcon(BarChart),
+  },
+  {
     label: "用户管理",
     key: "user-manage",
     icon: renderIcon(PeopleOutline),
@@ -42,18 +54,6 @@ const menuOptions = [
         key: "user-manage-2",
       },
     ],
-  },
-  {
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: "/dashboard",
-        },
-        { default: () => "仪表盘" }
-      ),
-    key: "dashboard-manage",
-    icon: renderIcon(BarChart),
   },
   {
     label: () =>

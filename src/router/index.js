@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "@/pages/Home.vue";
 import Users from "@/pages/Users.vue";
 import Login from "@/pages/Login.vue";
 import Dashboard from "@/pages/Dashboard.vue";
@@ -24,14 +23,9 @@ const router = createRouter({
       name: "Layout",
       component: Layout,
       redirect: {
-        name: "Home",
+        name: "Dashboard",
       },
       children: [
-        {
-          path: "home",
-          name: "Home",
-          component: Home,
-        },
         {
           // 管理员用户
           path: "admins",
@@ -58,8 +52,7 @@ const router = createRouter({
           name: "Dashboard",
           component: Dashboard,
           meta: {
-            title: "仪表盘",
-            roles: ["super_admin"],
+            title: "仪表盘"
           },
         },
         {

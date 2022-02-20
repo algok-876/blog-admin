@@ -1,16 +1,16 @@
 <template>
   <div class="core-data">
-    <n-grid class="info" x-gap="15" :cols="5">
+    <n-grid class="info" x-gap="30" :cols="4">
       <n-gi>
         <dataCard
           :option="allCount.article"
-          v-model:article-chart="chartActile"
+          v-model:chart-type="chartType"
         />
       </n-gi>
       <n-gi>
         <dataCard
           :option="allCount.visit"
-          v-model:article-chart="chartActile"
+          v-model:chart-type="chartType"
         />
       </n-gi>
     </n-grid>
@@ -36,12 +36,10 @@
 import { ref, onMounted, watch, reactive } from "vue";
 import { Book, Person } from "@vicons/ionicons5";
 import {
-  articleCountWeek,
-  articleCountMonth,
+  articleChartData,
   articleCount,
   visitCount,
-  visitCountWeek,
-  visitCountMonth,
+  visitChartData
 } from "@/api/index.js";
 import chart from "@/components/chart.vue";
 import dataCard from "@/components/dataCard.vue";
@@ -60,7 +58,8 @@ let timeOptions = [
     value: 30,
   },
 ];
-let chartActile = ref("article");
+let chartType = ref("article");
+
 let allCount = reactive({
   article: {
     title: "文章总数",
@@ -84,79 +83,56 @@ let allCount = reactive({
   },
 });
 
+// 将选择的时间转换为请求参数
+function dayToParams (day) {
+  return day === 7 ? 'week' : 'month'
+}
+
 async function initArticleCount() {
   let result = await articleCount();
   allCount.article.data = result.data;
 }
-// 获取近7天的数据
-async function initArticleWeek() {
-  let result = await articleCountWeek();
+
+// 获取文章数据
+async function fetchArticleChart() {
+  let result = await articleChartData(dayToParams(time.value));
   data.value = result.data;
   labels.value = result.labels;
-  ChartTitle.value = "近7天文章发布量";
+  ChartTitle.value = `近${time.value}天文章发布量`;
   // console.log(result);
-}
-// 获取近30天的数据
-async function initArticleMonth() {
-  let result = await articleCountMonth();
-  data.value = result.data;
-  labels.value = result.labels;
-  ChartTitle.value = "近30天文章发布量";
-  // console.log(result);
-}
-function initArticleChart() {
-  if (time.value === 7) {
-    initArticleWeek();
-  } else if (time.value === 30) {
-    initArticleMonth();
-  }
 }
 
 async function initVisitCount() {
   let result = await visitCount();
   allCount.visit.data = result.data;
 }
-// 获取近7天访问人数的数据
-async function initVisitWeek() {
-  let result = await visitCountWeek();
+
+// 获取访问人数图表数据
+async function fetchVisitChart () {
+  let result = await visitChartData(dayToParams(time.value));
   data.value = result.data;
   labels.value = result.labels;
-  ChartTitle.value = "近7天访问人数量";
-  // console.log(result);
-}
-// 获取近30天访问人数的数据
-async function initVisitMonth() {
-  let result = await visitCountMonth();
-  data.value = result.data;
-  labels.value = result.labels;
-  ChartTitle.value = "近30天访问人数量";
-  // console.log(result);
-}
-function initVisitChart() {
-  if (time.value === 7) {
-    initVisitWeek();
-  } else if (time.value === 30) {
-    initVisitMonth();
-  }
+  ChartTitle.value = `近${time.value}天访问人数`;
 }
 
+// 初始化图表数据
 function inintChart() {
-  switch (chartActile.value) {
+  switch (chartType.value) {
     case "article":
-      initArticleChart();
+      fetchArticleChart();
       break;
     case "visit":
-      initVisitChart();
+      fetchVisitChart();
       break;
     default:
-      initArticleChart();
+      fetchArticleChart();
       break;
   }
 }
 watch(
-  () => [time.value, chartActile.value],
+  () => [time.value, chartType.value],
   () => {
-    console.log(chartActile.value)
+    console.log(chartType.value)
     inintChart();
   }
 );

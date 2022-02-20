@@ -70,7 +70,7 @@ function articleCount() {
   return service.get("/article/count")
 }
 
-// 获取近7天的文章数量
+/* // 获取近7天的文章数量
 function articleCountWeek() {
   return service.get("/article/week")
 }
@@ -78,6 +78,15 @@ function articleCountWeek() {
 // 获取近30天的文章数量
 function articleCountMonth() {
   return service.get("/article/month")
+} */
+
+// 文章数量（图表数据）
+function articleChartData (presetDate) {
+  return service.get("/article/chart", {
+    params: {
+      preset_date: presetDate
+    }
+  })
 }
 
 // 获取访问人数数据
@@ -85,7 +94,7 @@ function visitCount() {
   return service.get("/visit/count")
 }
 
-// 获取近7天的访问人数数据
+/* // 获取近7天的访问人数数据
 function visitCountWeek() {
   return service.get("/visit/week")
 }
@@ -93,6 +102,15 @@ function visitCountWeek() {
 // 获取近30天的访问人数数据
 function visitCountMonth() {
   return service.get("/visit/month")
+} */
+
+// 访问人数（图表数据）
+function visitChartData (presetDate) {
+  return service.get("/visit/chart", {
+    params: {
+      preset_date: presetDate
+    }
+  })
 }
 
 export {
@@ -109,9 +127,7 @@ export {
   updateArticle,
   createArticle,
   articleCount,
-  articleCountWeek,
-  articleCountMonth,
   visitCount,
-  visitCountWeek,
-  visitCountMonth
+  visitChartData,
+  articleChartData
 };
