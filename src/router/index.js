@@ -6,6 +6,7 @@ import Articles from "@/pages/Articles.vue";
 import Admins from "@/pages/Admins.vue";
 import Comments from "@/pages/Comments.vue";
 import Publish from "@/pages/Publish.vue";
+import Profile from '@/pages/Profile.vue'
 import Tags from "@/pages/Tags.vue";
 import Layout from "@/pages/Layout.vue";
 import Roles from "@/pages/Roles.vue";
@@ -107,6 +108,14 @@ const router = createRouter({
           meta: {
             title: "角色管理",
             roles: ["super_admin"],
+          },
+        },
+        {
+          path: "profile",
+          name: "Profile",
+          component: Profile,
+          meta: {
+            title: "个人中心"
           },
         },
       ],

@@ -1,11 +1,14 @@
 <template>
   <div class="user-tool">
-    <n-avatar size="large" round style="marign-right: 25px">{{
-      username.substr(0, 1).toUpperCase()
-    }}</n-avatar>
-    <n-dropdown :options="options" trigger="click" @select="onSelect">
-      <n-button text>{{ username }}</n-button>
-    </n-dropdown>
+    <n-space align="center">
+      <n-avatar size="large" round v-if="!userInfo.avatar">{{
+        username.substr(0, 1).toUpperCase()
+      }}</n-avatar>
+      <n-avatar size="large" :src="userInfo.avatar" round v-else></n-avatar>
+      <n-dropdown :options="options" trigger="click" @select="onSelect">
+        <n-button text>{{ username }}</n-button>
+      </n-dropdown>
+    </n-space>
   </div>
 </template>
 
@@ -69,6 +72,9 @@ function onSelect(key, options) {
     // 编辑用户资料
   } else {
     // 个人中心
+    router.push({
+      name: 'Profile'
+    })
   }
 }
 </script>
