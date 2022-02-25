@@ -160,6 +160,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
             {
               onClick: () => onUpdata(row, index),
               type: "info",
+              size: 'small',
               style: {
                 marginRight: "3px",
               },
@@ -173,6 +174,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
             {
               onClick: () => onDelete(row, index),
               type: "warning",
+              size: 'small',
               style: {
                 marginRight: "3px",
               },
