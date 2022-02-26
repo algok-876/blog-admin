@@ -39,8 +39,6 @@ function login(cb) {
         );
         cb();
       } catch (err) {
-        console.log(err);
-        window.$message.error("邮箱或密码错误，请检查");
       }
     }
   });

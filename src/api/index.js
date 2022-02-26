@@ -128,6 +128,15 @@ function visitChartData (presetDate) {
   })
 }
 
+// 用户更改密码
+function updateUserPassword (old_pwd, new_pwd, new_pwd_confirm) {
+  return service.post('/user/update/pwd', {
+    old_pwd,
+    new_pwd,
+    new_pwd_confirm
+  })
+}
+
 export {
   getTags,
   deleteTag,
@@ -147,5 +156,6 @@ export {
   articleCount,
   visitCount,
   visitChartData,
-  articleChartData
+  articleChartData,
+  updateUserPassword
 };

@@ -40,7 +40,7 @@
         :rules="rules"
         label-placement="left"
       >
-        <n-form-item path="old_pwd" label="旧密码">
+        <n-form-item path="old_password" label="旧密码">
           <n-input
             v-model:value="updatePwd.old_password"
             @keydown.enter.prevent
@@ -64,7 +64,7 @@
         <div class="buttons">
           <n-space>
             <n-button type="default" @click="reset">重置</n-button>
-            <n-button type="info" @click="onLogin">确认更改，重新登录</n-button>
+            <n-button type="info" @click="updatePassword">确认更改，重新登录</n-button>
           </n-space>
         </div>
       </n-form>
@@ -80,17 +80,67 @@
 import { reactive, ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
+import { clearForm } from "../utils/form"
+import { updateUserPassword } from '@/api' 
+import { useMessage } from 'naive-ui'
+import { useRouter } from 'vue-router'
+const message = useMessage()
+const router = useRouter()
 const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
-
+const formRef = ref(null)
 // 用户名model
 const username = ref(userInfo.value.username);
 // 更新密码表单model
 const updatePwd = reactive({
   old_password: "",
   new_password: "",
-  confirm_passwrod: "",
+  confirm_password: "",
 });
+// 表单验证规则
+const rules = {
+  old_password: [{ required: true, message: "请填写旧密码" }],
+  new_password: [{ required: true, message: "请填写新密码" }],
+  confirm_password: [
+    {
+      validator(rule, value) {
+        console.log(value)
+        if (value !== updatePwd.new_password) {
+          return new Error("两次密码不一致");
+        }
+        return true;
+      },
+    },
+  ],
+};
+
+// 用户修改密码
+async function updatePassword () {
+  try {
+    await formRef.value.validate()
+    const result = await updateUserPassword(
+      updatePwd.old_password,
+      updatePwd.new_password,
+      updatePwd.confirm_password
+    )
+    // 成功
+    message.success(result.message)
+    // 退出登录
+    userStore.logout()
+    router.push({
+      name: 'Login'
+    })
+  } catch (err) {
+    // 提示错误信息
+    err.message && message(err.message)
+  }
+}
+
+// 重置表单
+function reset () {
+  clearForm(updatePwd, formRef)
+}
+
 </script>
 
 <style lang="scss">
