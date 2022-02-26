@@ -13,4 +13,9 @@ function hasRole(userRoles, roles) {
   });
 }
 
-export { getToken, getTitle, hasRole };
+// 根据是否有token决定是否需要自动登录
+function isAutoLogin () {
+  return !!getToken()
+}
+
+export { getToken, getTitle, hasRole, isAutoLogin };
