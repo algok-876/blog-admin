@@ -12,7 +12,7 @@
         <div class="label">用户名</div>
         <n-space>
           <n-input v-model:value="username" type="text" />
-          <n-button type="primary">修改用户名</n-button>
+          <n-button type="primary" @click="modifyUsername">修改用户名</n-button>
         </n-space>
       </n-space>
       <n-space align="center">
@@ -64,7 +64,7 @@
         <div class="buttons">
           <n-space>
             <n-button type="default" @click="reset">重置</n-button>
-            <n-button type="info" @click="updatePassword">确认更改，重新登录</n-button>
+            <n-button type="primary" @click="updatePassword">确认更改，重新登录</n-button>
           </n-space>
         </div>
       </n-form>
@@ -139,6 +139,13 @@ async function updatePassword () {
 // 重置表单
 function reset () {
   clearForm(updatePwd, formRef)
+}
+
+// 修改用户名
+async function modifyUsername () {
+  if (!username.value || userStore.userInfo.username === username.value) return
+  const res = await userStore.updateUsername(username.value)
+  res && message.success(res.message)
 }
 
 </script>

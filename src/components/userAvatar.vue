@@ -81,7 +81,6 @@ function onSelect(key, options) {
 
 <style lang="scss" scoped>
 .user-tool {
-  width: 120px;
   display: flex;
   align-items: center;
   justify-content: space-between;

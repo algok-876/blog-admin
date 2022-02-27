@@ -137,6 +137,13 @@ function updateUserPassword (old_pwd, new_pwd, new_pwd_confirm) {
   })
 }
 
+// 用户修改用户名
+function updateUserInfo (username) {
+  return service.post('/user/update', {
+    username
+  })
+}
+
 export {
   getTags,
   deleteTag,
@@ -157,5 +164,6 @@ export {
   visitCount,
   visitChartData,
   articleChartData,
-  updateUserPassword
+  updateUserPassword,
+  updateUserInfo
 };
