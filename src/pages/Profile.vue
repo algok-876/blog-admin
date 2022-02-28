@@ -64,7 +64,9 @@
         <div class="buttons">
           <n-space>
             <n-button type="default" @click="reset">重置</n-button>
-            <n-button type="primary" @click="updatePassword">确认更改，重新登录</n-button>
+            <n-button type="primary" @click="updatePassword"
+              >确认更改，重新登录</n-button
+            >
           </n-space>
         </div>
       </n-form>
@@ -73,6 +75,32 @@
     <n-divider title-placement="left" dashed>
       <n-gradient-text type="info" :size="18"> 更改头像 </n-gradient-text>
     </n-divider>
+
+    <div class="content avatar-upload">
+      <n-upload
+        :default-upload="false"
+        ref="uploadRef"
+        accept="image/*"
+        list-type="image"
+        :on-update:file-list="fileChange"
+        :max="1"
+      >
+        <n-upload-dragger>
+          <div style="margin-bottom: 12px">
+            <n-icon size="48" :depth="3">
+              <archive-icon />
+            </n-icon>
+          </div>
+          <n-text style="font-size: 16px">
+            点击或者拖动你要更换的头像到该区域来上传
+          </n-text>
+          <n-p depth="3" style="margin: 8px 0 0 0">
+            请不要上传非法敏感文件
+          </n-p>
+        </n-upload-dragger>
+      </n-upload>
+      <n-button type="primary" @click="updateAvatar">上传该头像</n-button>
+    </div>
   </div>
 </template>
 
@@ -80,15 +108,16 @@
 import { reactive, ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { clearForm } from "../utils/form"
-import { updateUserPassword } from '@/api' 
-import { useMessage } from 'naive-ui'
-import { useRouter } from 'vue-router'
-const message = useMessage()
-const router = useRouter()
+import { clearForm } from "../utils/form";
+import { updateUserPassword } from "@/api";
+import { useMessage } from "naive-ui";
+import { useRouter } from "vue-router";
+import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
+const message = useMessage();
+const router = useRouter();
 const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
-const formRef = ref(null)
+const formRef = ref(null);
 // 用户名model
 const username = ref(userInfo.value.username);
 // 更新密码表单model
@@ -104,7 +133,7 @@ const rules = {
   confirm_password: [
     {
       validator(rule, value) {
-        console.log(value)
+        console.log(value);
         if (value !== updatePwd.new_password) {
           return new Error("两次密码不一致");
         }
@@ -115,39 +144,54 @@ const rules = {
 };
 
 // 用户修改密码
-async function updatePassword () {
+async function updatePassword() {
   try {
-    await formRef.value.validate()
+    await formRef.value.validate();
     const result = await updateUserPassword(
       updatePwd.old_password,
       updatePwd.new_password,
       updatePwd.confirm_password
-    )
+    );
     // 成功
-    message.success(result.message)
+    message.success(result.message);
     // 退出登录
-    userStore.logout()
+    userStore.logout();
     router.push({
-      name: 'Login'
-    })
+      name: "Login",
+    });
   } catch (err) {
     // 提示错误信息
-    err.message && message(err.message)
+    err.message && message(err.message);
   }
 }
 
 // 重置表单
-function reset () {
-  clearForm(updatePwd, formRef)
+function reset() {
+  clearForm(updatePwd, formRef);
 }
 
 // 修改用户名
-async function modifyUsername () {
-  if (!username.value || userStore.userInfo.username === username.value) return
-  const res = await userStore.updateUsername(username.value)
-  res && message.success(res.message)
+async function modifyUsername() {
+  if (!username.value || userStore.userInfo.username === username.value) return;
+  const res = await userStore.updateUsername(username.value);
+  res && message.success(res.message);
 }
 
+let uploadAvatar = null
+const uploadRef = ref(null)
+// 文件上传监听函数
+function fileChange (filelist) {
+  uploadAvatar = filelist[0]
+}
+
+async function updateAvatar () {
+  if (!uploadAvatar) return
+  const data = new FormData()
+  data.append('avatar', uploadAvatar.file)
+  const result = await userStore.modifyAvatar(data)
+  message.success('头像更换成功')
+  uploadRef.value.clear()
+}
 </script>
 
 <style lang="scss">
@@ -161,6 +205,9 @@ async function modifyUsername () {
   .n-form-item-label {
     width: 112px;
     text-align: left;
+  }
+  .avatar-upload {
+    width: 370px;
   }
 }
 </style>

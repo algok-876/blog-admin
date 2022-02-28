@@ -27,7 +27,11 @@ import {
   NDatePicker,
   NNumberAnimation,
   NDivider,
-  NTag
+  NTag,
+  NUpload,
+  NUploadDragger,
+  NText,
+  NP
 } from "naive-ui";
 
 export default create({
@@ -59,6 +63,10 @@ export default create({
     NDatePicker,
     NNumberAnimation,
     NDivider,
-    NTag
+    NTag,
+    NUpload,
+    NUploadDragger,
+    NText,
+    NP
   ],
 });

@@ -144,6 +144,10 @@ function updateUserInfo (username) {
   })
 }
 
+function updateUserAvatar (formdata) {
+  return service.post('/upload/avatar', formdata)
+}
+
 export {
   getTags,
   deleteTag,
@@ -165,5 +169,6 @@ export {
   visitChartData,
   articleChartData,
   updateUserPassword,
-  updateUserInfo
+  updateUserInfo,
+  updateUserAvatar
 };

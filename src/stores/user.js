@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import service from "@/api/service";
-import { updateUserInfo } from '@/api'
+import { updateUserInfo, updateUserAvatar } from '@/api'
 
 export const useUserStore = defineStore({
   id: "user",
@@ -35,13 +35,13 @@ export const useUserStore = defineStore({
       }
     },
     // 用户修改用户名
-    async updateUsername (username) {
+    async updateUsername(username) {
       return new Promise(async (resolve, reject) => {
         try {
           const result = await updateUserInfo(username)
           this.userInfo.username = username
           resolve(result)
-        } catch(err) {
+        } catch (err) {
           reject(err)
         }
       })
@@ -66,5 +66,11 @@ export const useUserStore = defineStore({
       window.$message.success("退出登录");
       return Promise.resolve();
     },
+    // 用户更新头像
+    async modifyAvatar(avatar) {
+      const result = await updateUserAvatar(avatar)
+      this.userInfo.avatar = result.data.url
+      Promise.resolve(result)
+    }
   },
 });
