@@ -26,7 +26,7 @@
       />
     </n-form-item>
     <n-form-item label="内容" path="content">
-      <editor v-model:value="formValue.content"></editor>
+      <editor ref="editorDiv" v-model:value="formValue.content" :isEdit="isEdit"></editor>
     </n-form-item>
     <n-form-item>
       <n-button @click="resetForm" type="warning" v-if="!isEdit"
@@ -66,6 +66,7 @@ const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
 const message = useMessage();
 const formRef = ref(null);
+const editorDiv = ref(null);
 
 // 当前模式 publish or edit
 const isEdit = computed(() => {
@@ -144,6 +145,7 @@ function handleValidateClick() {
           author_id: userInfo.value._id,
         });
       }
+      editorDiv.value.handlePublish();
       resetForm();
       message.success(res.message);
     } else {

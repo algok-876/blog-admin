@@ -120,12 +120,17 @@ function visitCountMonth() {
 } */
 
 // 访问人数（图表数据）
-function visitChartData (presetDate) {
+function visitChartData(presetDate) {
   return service.get("/visit/chart", {
     params: {
       preset_date: presetDate
     }
   })
+}
+
+// 删除富文本编辑器图片
+function deleteEditorImg(options) {
+  return service.post('/upload/editor/delete', options)
 }
 
 export {
@@ -147,5 +152,6 @@ export {
   articleCount,
   visitCount,
   visitChartData,
-  articleChartData
+  articleChartData,
+  deleteEditorImg
 };
