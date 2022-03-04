@@ -191,6 +191,7 @@ async function updateAvatar () {
   const result = await userStore.modifyAvatar(data)
   message.success('头像更换成功')
   uploadRef.value.clear()
+  uploadAvatar = null
 }
 </script>
 
