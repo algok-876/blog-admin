@@ -6,13 +6,14 @@ import Articles from "@/pages/Articles.vue";
 import Admins from "@/pages/Admins.vue";
 import Comments from "@/pages/Comments.vue";
 import Publish from "@/pages/Publish.vue";
+import Profile from "@/pages/Profile.vue";
 import Tags from "@/pages/Tags.vue";
 import Layout from "@/pages/Layout.vue";
 import Roles from "@/pages/Roles.vue";
 import store from "@/stores";
 import { getTitle } from "@/utils/auth.js";
 import { useUserStore } from "@/stores/user";
-import { hasRole } from "@/utils/auth";
+import { hasRole, isAutoLogin } from "@/utils/auth";
 const userStore = useUserStore(store);
 
 const router = createRouter({
@@ -52,7 +53,7 @@ const router = createRouter({
           name: "Dashboard",
           component: Dashboard,
           meta: {
-            title: "仪表盘"
+            title: "仪表盘",
           },
         },
         {
@@ -109,6 +110,14 @@ const router = createRouter({
             roles: ["super_admin"],
           },
         },
+        {
+          path: "profile",
+          name: "Profile",
+          component: Profile,
+          meta: {
+            title: "个人中心",
+          },
+        },
       ],
     },
     {
@@ -123,7 +132,7 @@ let autoLogined = false;
 
 router.beforeEach(async (to, from, next) => {
   // 尝试自动登录
-  if (!autoLogined) {
+  if (!autoLogined && isAutoLogin()) {
     try {
       const res = await userStore.autoLogin();
       if (res) {
@@ -158,7 +167,6 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (userStore.isLogin && userStore.userInfo) {
-    console.log(123);
     // 用户角色信息
     const userRoles = userStore.userInfo.roles;
     if (to.meta.roles && !hasRole(userRoles, to.meta.roles)) {

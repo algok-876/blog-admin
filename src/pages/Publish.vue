@@ -26,7 +26,11 @@
       />
     </n-form-item>
     <n-form-item label="内容" path="content">
-      <editor ref="editorDiv" v-model:value="formValue.content" :isEdit="isEdit"></editor>
+      <editor
+        ref="editorDiv"
+        v-model:value="formValue.content"
+        :isEdit="isEdit"
+      ></editor>
     </n-form-item>
     <n-form-item>
       <n-button @click="resetForm" type="warning" v-if="!isEdit"

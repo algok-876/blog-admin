@@ -1,6 +1,9 @@
 <template>
   <div
-    :class="['data-card-1', props.option.chart === props.chartType ? 'data-card-active' : '']"
+    :class="[
+      'data-card-1',
+      props.option.chart === props.chartType ? 'data-card-active' : '',
+    ]"
     @click="changeChart"
   >
     <div class="left">
@@ -47,7 +50,7 @@ const props = defineProps({
     type: String,
   },
 });
-console.log(props.articleChart)
+console.log(props.articleChart);
 const emits = defineEmits(["update:chart-type"]);
 function changeChart() {
   emits("update:chart-type", props.option.chart);
@@ -62,7 +65,7 @@ function changeChart() {
   padding: 15px 20px;
   box-shadow: 0px 0px 20px 0px #80808029;
   border-radius: 10px;
-  transition: all .2s linear;
+  transition: all 0.2s linear;
   cursor: pointer;
   .left {
     .title {

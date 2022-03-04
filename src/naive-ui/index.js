@@ -25,7 +25,13 @@ import {
   NPagination,
   NSpace,
   NDatePicker,
-  NNumberAnimation
+  NNumberAnimation,
+  NDivider,
+  NTag,
+  NUpload,
+  NUploadDragger,
+  NText,
+  NP,
 } from "naive-ui";
 
 export default create({
@@ -55,6 +61,12 @@ export default create({
     NPagination,
     NSpace,
     NDatePicker,
-    NNumberAnimation
+    NNumberAnimation,
+    NDivider,
+    NTag,
+    NUpload,
+    NUploadDragger,
+    NText,
+    NP,
   ],
 });

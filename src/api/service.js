@@ -35,12 +35,15 @@ service.interceptors.response.use(
     const {
       response: { data: res },
     } = error;
-    console.log("接口信息报错", error);
+    // console.log("接口信息报错", error);
+    // console.dir(error)
     if (res.code == 50346) {
       // 缺少权限
       window.$message.error("您缺少权限");
     } else {
-      window.$message.error(res.message);
+      if (error.config.url !== "/user/info") {
+        window.$message.error(res.message);
+      }
     }
     return Promise.reject(error);
   }

@@ -7,7 +7,7 @@ import {
   SendOutline,
   AtSharp,
   PersonCircleOutline,
-  BarChart
+  BarChart,
 } from "@vicons/ionicons5";
 import { NIcon } from "naive-ui";
 function renderIcon(icon) {

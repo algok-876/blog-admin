@@ -52,7 +52,7 @@ watch(
     initChart();
   },
   {
-    deep: true
+    deep: true,
   }
 );
 
@@ -63,5 +63,4 @@ onMounted(() => {
 });
 </script>
 
-<style>
-</style>
+<style></style>

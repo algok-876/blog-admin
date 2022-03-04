@@ -35,8 +35,8 @@
   <n-modal
     v-model:show="showModal"
     preset="dialog"
-    :title="isCreate?'创建标签':'更新标签'"
-    :positive-text="isCreate?'确认创建':'确认更新'"
+    :title="isCreate ? '创建标签' : '更新标签'"
+    :positive-text="isCreate ? '确认创建' : '确认更新'"
     @positive-click="handleValidateClick"
     negative-text="取消"
   >
@@ -53,7 +53,6 @@
     </n-form>
   </n-modal>
 </template>
-
 
 <script setup>
 import { onMounted, ref, h, reactive } from "vue";

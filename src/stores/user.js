@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import service from "@/api/service";
+import { updateUserInfo, updateUserAvatar } from "@/api";
 
 export const useUserStore = defineStore({
   id: "user",
@@ -10,12 +11,14 @@ export const useUserStore = defineStore({
   }),
   getters: {},
   actions: {
+    // 获取用户信息
     async getUserInfo() {
       const userInfo = await service.get("/user/info");
       this.userInfo = userInfo.data;
       console.log(this.userInfo);
       return Promise.resolve(userInfo);
     },
+    // 用户登录
     async login(email, password) {
       const loginResult = await service.post("/user/login", {
         email,
@@ -30,6 +33,18 @@ export const useUserStore = defineStore({
       } else {
         return Promise.reject();
       }
+    },
+    // 用户修改用户名
+    async updateUsername(username) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const result = await updateUserInfo(username);
+          this.userInfo.username = username;
+          resolve(result);
+        } catch (err) {
+          reject(err);
+        }
+      });
     },
     // 自动登录
     async autoLogin() {
@@ -50,6 +65,12 @@ export const useUserStore = defineStore({
       this.isLogin = false;
       window.$message.success("退出登录");
       return Promise.resolve();
+    },
+    // 用户更新头像
+    async modifyAvatar(avatar) {
+      const result = await updateUserAvatar(avatar);
+      this.userInfo.avatar = result.data.url;
+      Promise.resolve(result);
     },
   },
 });

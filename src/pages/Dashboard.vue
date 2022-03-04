@@ -2,16 +2,10 @@
   <div class="core-data">
     <n-grid class="info" x-gap="30" :cols="4">
       <n-gi>
-        <dataCard
-          :option="allCount.article"
-          v-model:chart-type="chartType"
-        />
+        <dataCard :option="allCount.article" v-model:chart-type="chartType" />
       </n-gi>
       <n-gi>
-        <dataCard
-          :option="allCount.visit"
-          v-model:chart-type="chartType"
-        />
+        <dataCard :option="allCount.visit" v-model:chart-type="chartType" />
       </n-gi>
     </n-grid>
     <div class="chart-title">
@@ -39,7 +33,7 @@ import {
   articleChartData,
   articleCount,
   visitCount,
-  visitChartData
+  visitChartData,
 } from "@/api/index.js";
 import chart from "@/components/chart.vue";
 import dataCard from "@/components/dataCard.vue";
@@ -84,8 +78,8 @@ let allCount = reactive({
 });
 
 // 将选择的时间转换为请求参数
-function dayToParams (day) {
-  return day === 7 ? 'week' : 'month'
+function dayToParams(day) {
+  return day === 7 ? "week" : "month";
 }
 
 async function initArticleCount() {
@@ -108,7 +102,7 @@ async function initVisitCount() {
 }
 
 // 获取访问人数图表数据
-async function fetchVisitChart () {
+async function fetchVisitChart() {
   let result = await visitChartData(dayToParams(time.value));
   data.value = result.data;
   labels.value = result.labels;
@@ -132,7 +126,7 @@ function inintChart() {
 watch(
   () => [time.value, chartType.value],
   () => {
-    console.log(chartType.value)
+    console.log(chartType.value);
     inintChart();
   }
 );
