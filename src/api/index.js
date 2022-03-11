@@ -1,4 +1,6 @@
 import service from '@/api/service'
+import axios from 'axios'
+import { getToken, getBaseURL } from '../utils/auth'
 
 // 获取标签列表
 function getTags(options) {
@@ -108,13 +110,8 @@ function visitChartData(presetDate) {
   })
 }
 
-// 删除富文本编辑器图片
-function deleteEditorImg(options) {
-  return service.post('/upload/editor/delete', options)
-}
-
 // 用户更改密码
-function updateUserPassword (old_pwd, new_pwd, new_pwd_confirm) {
+function updateUserPassword(old_pwd, new_pwd, new_pwd_confirm) {
   return service.post('/user/update/pwd', {
     old_pwd,
     new_pwd,
@@ -123,13 +120,13 @@ function updateUserPassword (old_pwd, new_pwd, new_pwd_confirm) {
 }
 
 // 用户修改用户名
-function updateUserInfo (username) {
+function updateUserInfo(username) {
   return service.post('/user/update', {
     username
   })
 }
 
-function updateUserAvatar (formdata) {
+function updateUserAvatar(formdata) {
   return service.post('/upload/avatar', formdata)
 }
 
@@ -155,7 +152,50 @@ function deleteUser(id) {
 
 // 调整用户角色
 function modifyUserRole(options) {
-  return service.post("/user/role", options)
+  return service.post('/user/role', options)
+}
+
+// 富文本编辑器上传图片
+function uploadEditorImg(options) {
+  let token = getToken()
+  return axios({
+    url: getBaseURL() + '/upload/editor',
+    method: 'post',
+    data: options,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      authorization: 'bearer ' + token
+    }
+  })
+}
+
+// 删除富文本编辑器图片
+function deleteEditorImg(options) {
+  return service.post('/upload/editor/delete', options)
+}
+
+// 获取草稿箱的文章
+function getArticleDraftList() {
+  return service.get('/articleDraft/list')
+}
+
+function createArticleDraft(options) {
+  return service.post('/articleDraft/create', options)
+}
+
+// 获取草稿详情
+function getArticleDraftDetail(id) {
+  return service.get('/articleDraft/detail/' + id)
+}
+
+// 更新草稿数据
+function updateArticleDraft(id, options) {
+  return service.post(`/articleDraft/update/${id}`, options)
+}
+
+// 删除草稿
+function delArticleDraft(id) {
+  return service.post('/articleDraft/delete/' + id)
 }
 
 export {
@@ -186,5 +226,11 @@ export {
   getRolesList,
   createUser,
   deleteUser,
-  modifyUserRole
+  modifyUserRole,
+  uploadEditorImg,
+  getArticleDraftList,
+  createArticleDraft,
+  getArticleDraftDetail,
+  updateArticleDraft,
+  delArticleDraft
 }

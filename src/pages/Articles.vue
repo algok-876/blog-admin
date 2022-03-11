@@ -67,7 +67,7 @@
         </div>
       </div>
     </div>
-    <div class="detail-content" v-html="detailData.content"></div>
+    <div class="detail-content markdown-body" v-html="detailData.content"></div>
   </n-modal>
 </template>
 
@@ -160,7 +160,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
             {
               onClick: () => onUpdata(row, index),
               type: "info",
-              size: 'small',
+              size: "small",
               style: {
                 marginRight: "3px",
               },
@@ -174,7 +174,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
             {
               onClick: () => onDelete(row, index),
               type: "warning",
-              size: 'small',
+              size: "small",
               style: {
                 marginRight: "3px",
               },

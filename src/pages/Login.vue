@@ -82,6 +82,7 @@ const blessings = welcome();
       top: 15%;
     }
     .form {
+      position: relative;
       top: 23%;
       .buttons {
         display: flex;

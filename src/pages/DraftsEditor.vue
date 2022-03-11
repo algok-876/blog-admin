@@ -33,60 +33,36 @@
         @imgAdd="editorImgAdd"
         @imgDel="editorImgDel"
       ></mavonEditor>
-      <!-- <editor
-        ref="editorDiv"
-        v-model:value="formValue.content"
-        :isEdit="isEdit"
-      ></editor> -->
     </n-form-item>
     <n-form-item>
-      <n-button
-        @click="
-          router.push({
-            name: 'Drafts',
-          })
-        "
-        type="info"
-        style="margin-right: 24px"
-        v-if="!isEdit"
-        >草稿箱</n-button
-      >
-      <n-button @click="resetForm" type="warning" v-if="!isEdit"
-        >重置表单</n-button
-      >
-      <n-button @click="back" type="default" v-else>想通了, 不改了</n-button>
+      <n-button @click="resetForm" type="warning">重置表单</n-button>
       <n-button
         @click="handleValidateClick"
         style="margin-left: 24px"
         type="primary"
-        >{{ isEdit ? "更新文章" : "发布文章" }}</n-button
+        >发布文章</n-button
       >
     </n-form-item>
   </n-form>
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-  onBeforeUnmount,
-  reactive,
-  computed,
-  watch,
-} from "vue";
+import { ref, onMounted, onBeforeUnmount, reactive, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user";
 import { useMessage } from "naive-ui";
 import { useRoute, useRouter } from "vue-router";
 import {
   getTags,
-  getArticleDetail,
-  updateArticle,
+  getArticleDraftDetail,
+  updateArticleDraft,
   createArticle,
   uploadEditorImg,
   deleteEditorImg,
-  createArticleDraft,
+  delArticleDraft,
 } from "@/api/index";
+import { mavonEditor } from "mavon-editor";
+import "mavon-editor/dist/css/index.css";
 // 路由对象
 const route = useRoute();
 const router = useRouter();
@@ -98,8 +74,7 @@ const message = useMessage();
 const formRef = ref(null);
 const editorRef = ref(null);
 const isPublish = ref(false);
-// 当前模式 publish or edit
-const isEdit = ref(!!route.params.id);
+const detailId = route.params.id;
 
 // 观察路径的改变，路径改变代表模式的改变
 // watch(
@@ -109,16 +84,13 @@ const isEdit = ref(!!route.params.id);
 //   }
 // );
 
-// function editorChange() {
-//   if (editorRef.value === "") return;
-//   console.log(findImgs(editorRef.value));
-// }
 async function editorImgAdd(pos, $file) {
   // 第一步.将图片上传到服务器.
   let formdata = new FormData();
   formdata.append("editor", $file);
   try {
     let res = await uploadEditorImg(formdata);
+    // console.log(res.data);
     editorRef.value.$img2Url(pos, res.data.url);
   } catch (error) {
     editorRef.value.$img2Url(pos, "");
@@ -180,34 +152,26 @@ function back() {
 function handleValidateClick() {
   formValue.title = formValue.title.trim();
   formValue.md_content = formValue.md_content.trim();
+  if (!formValue.title) {
+    message.error("标题不能为空格");
+    return;
+  }
   formRef.value.validate(async (errors) => {
     if (!errors) {
       let res = null;
       contentImgs.value = findImgs(formValue.md_content);
-      if (contentImgs.value.length !== 0) {
-        formValue.content_img = contentImgs.value.join(",");
-      } else {
-        formValue.content_img = "";
-      }
-      if (isEdit.value) {
-        // 编辑模式下 调用修改文章信息接口
-        res = await updateArticle(route.params.id, {
-          ...formValue,
-          content: editorRef.value.d_render,
-        });
-        router.push({
-          name: "Articles",
-        });
-      } else {
-        res = await createArticle({
-          ...formValue,
-          author_id: userInfo.value._id,
-          content: editorRef.value.d_render,
-        });
-      }
+      formValue.content_img = contentImgs.value.join(",");
+      res = await createArticle({
+        ...formValue,
+        author_id: userInfo.value._id,
+        content: editorRef.value.d_render,
+      });
       isPublish.value = true;
       resetForm();
       message.success(res.message);
+      // 删除草稿
+      await delArticleDraft(route.params.id);
+      back();
     } else {
       let errorArr = [];
       errors.forEach((item) => {
@@ -233,25 +197,25 @@ async function initTagOptions() {
 }
 
 // 编辑模式下需要获取需要修改的文章的数据
-async function getArticle() {
-  const id = route.params.id;
-  const res = await getArticleDetail(id);
+async function getDetail() {
+  const res = await getArticleDraftDetail(detailId);
   Object.keys(res.data).forEach((key) => {
     formValue[key] = res.data[key];
   });
-  stateImgs.value = res.data.content_img.split(",");
+  if (res.data.content_img) {
+    stateImgs.value = res.data.content_img.split(",");
+  }
 }
 
 // 将没有发布的文章添加到草稿箱中
-async function createDrafts() {
-  if (isPublish.value || isEdit.value) return;
-  if (formValue.md_content || formValue.title || formValue.description) {
-    formValue.content_img = findImgs(formValue.md_content).join(",");
-    await createArticleDraft({
-      ...formValue,
-      author_id: userInfo.value._id,
-    });
-  }
+async function updateDrafts() {
+  if (isPublish.value) return;
+  contentImgs.value = findImgs(formValue.md_content);
+  formValue.content_img = contentImgs.value.join(",");
+  await updateArticleDraft(detailId, {
+    ...formValue,
+    author_id: userInfo.value._id,
+  });
 }
 
 // 查找出md_content中的所有图片
@@ -284,14 +248,7 @@ function getUseless(oldArr, newArr) {
 async function delUseless() {
   let imgs = [];
   // 筛选出没用的图片
-  if (!isEdit.value) return;
-  if (isPublish.value) {
-    // 在编辑模式下
-    imgs = getUseless(stateImgs.value, contentImgs.value);
-  } else {
-    contentImgs.value = findImgs(formValue.md_content);
-    imgs = getUseless(contentImgs.value, stateImgs.value);
-  }
+  imgs = getUseless(stateImgs.value, contentImgs.value);
   console.log("删除", imgs);
   if (imgs.length !== 0) {
     imgs = imgs.join(",");
@@ -301,14 +258,12 @@ async function delUseless() {
 
 onMounted(() => {
   initTagOptions();
-  // 编辑模式下需要获取文章数据
-  if (isEdit.value) {
-    getArticle();
-  }
+  getDetail();
 });
 onBeforeUnmount(() => {
+  // console.log(formValue.md_content || formValue.title || formValue.description);
+  updateDrafts();
   delUseless();
-  createDrafts();
   resetForm();
 });
 </script>
