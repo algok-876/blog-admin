@@ -5,13 +5,12 @@ import Dashboard from '@/pages/Dashboard.vue'
 import Articles from '@/pages/Articles.vue'
 import Admins from '@/pages/Admins.vue'
 import Comments from '@/pages/Comments.vue'
-import Publish from '@/pages/Publish.vue'
+import CommonEditor from '@/pages/CommonEditor.vue'
 import Profile from '@/pages/Profile.vue'
 import Tags from '@/pages/Tags.vue'
 import Layout from '@/pages/Layout.vue'
 import Roles from '@/pages/Roles.vue'
 import Drafts from '@/pages/Drafts.vue'
-import DraftsEditor from '@/pages/DraftsEditor.vue'
 import store from '@/stores'
 import { getTitle } from '@/utils/auth.js'
 import { useUserStore } from '@/stores/user'
@@ -70,7 +69,7 @@ const router = createRouter({
         {
           path: 'article/update/:id',
           name: 'ArticleUpdata',
-          component: Publish,
+          component: CommonEditor,
           meta: {
             title: '修改文章信息',
             roles: ['super_admin', 'editor']
@@ -97,7 +96,7 @@ const router = createRouter({
         {
           path: 'publish',
           name: 'Publish',
-          component: Publish,
+          component: CommonEditor,
           meta: {
             title: '撰写文章',
             roles: ['super_admin', 'editor']
@@ -131,7 +130,7 @@ const router = createRouter({
         {
           path: 'draft/edit/:id',
           name: 'ArticleDraft',
-          component: Publish,
+          component: CommonEditor,
           meta: {
             title: '编辑草稿'
           }

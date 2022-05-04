@@ -8,7 +8,16 @@
             style="margin-left: 24px"
             type="primary"
             size="large"
-            >{{ btnText }}</n-button
+            >
+            <n-space align="center">
+              <n-icon size="20">
+                <cloud-upload-outline />
+              </n-icon>
+              {{ btnText }}
+            </n-space>
+            
+            
+            </n-button
           >
           <n-button
             @click="saveToDrafts"
@@ -16,7 +25,14 @@
             style="margin-right: 24px"
             v-if="!isDraftEdit && !isArticleEdit"
             size="large"
-            >存为草稿</n-button
+            >
+              <n-space align="center">
+              <n-icon size="20">
+                <save-outline />
+              </n-icon>
+              存为草稿
+            </n-space>
+            </n-button
           >
           <n-button
             @click="updateDrafts"
@@ -24,12 +40,15 @@
             style="margin-right: 24px"
             v-if="isDraftEdit"
             size="large"
-            >继续保存至草稿</n-button
           >
-          <n-button
-            @click="resetForm"
-            type="warning"
-            size="large"
+            <n-space align="center">
+              <n-icon size="20">
+                <save-outline />
+              </n-icon>
+              继续保存至草稿
+            </n-space>
+          </n-button>
+          <n-button @click="resetForm" type="warning" size="large"
             >清空</n-button
           >
         </n-button-group>
@@ -86,6 +105,10 @@ import {
   computed,
   watch,
 } from "vue";
+import { 
+  SaveOutline,
+  CloudUploadOutline
+} from "@vicons/ionicons5";
 // 获取接口数据的方法
 import {
   getTags,
@@ -129,15 +152,18 @@ const btnText = computed(() => {
 });
 
 // 模式 参数变化时进行初始化
-watch(() => route.query.mode, (newVal, oldVal) => {
-  // 离开时自动保存草稿
-  if (isDraftEdit.value) updateDrafts()
-  newVal == 1 ? isArticleEdit.value = true : isArticleEdit.value = false;
-  newVal == 2 ? isDraftEdit.value = true : isDraftEdit.value = false;
-  newVal ? isPublish.value = false : isPublish.value = true;
-  resetForm()
-  id = route.params.id
-})
+watch(
+  () => route.query.mode,
+  (newVal, oldVal) => {
+    // 离开时自动保存草稿
+    if (isDraftEdit.value) updateDrafts();
+    newVal == 1 ? (isArticleEdit.value = true) : (isArticleEdit.value = false);
+    newVal == 2 ? (isDraftEdit.value = true) : (isDraftEdit.value = false);
+    newVal ? (isPublish.value = false) : (isPublish.value = true);
+    resetForm();
+    id = route.params.id;
+  }
+);
 
 async function editorImgAdd(pos, $file) {
   // 第一步.将图片上传到服务器.
@@ -223,10 +249,11 @@ function handleValidateClick() {
         ...formValue,
         content: editorRef.value.d_render,
       });
+      message.success("更新成功")
       router.push({
         name: "Articles",
       });
-      return
+      return;
     }
 
     if (isPublish.value || isDraftEdit.value) {
@@ -239,7 +266,7 @@ function handleValidateClick() {
       if (isDraftEdit.value) {
         delArticleDraft(route.params.id);
       }
-      return
+      return;
     }
     back();
     resetForm();
@@ -304,7 +331,7 @@ async function updateDrafts() {
     ...formValue,
     author_id: userInfo.value._id,
   });
-  message.success('已保存')
+  message.success("已保存");
 }
 
 // 删除没有保存到文章中的残余图片
