@@ -18,4 +18,28 @@ function handleDetailTime(date) {
   return `${time.getFullYear()}年${mount}月${day}日 ${hours}:${minu}`
 }
 
-export { dateToString, handleDetailTime }
+// 提取markdown文本中的图片url
+function extractMarkdownImages(content) {
+  let pattern = /!\[(.*?)\]\((.*?)\)/g
+  const imgs = [];
+  let matcher;
+  while (matcher = pattern.exec(content)) {
+    imgs.push(matcher[2])  // matcher[2] 为图片路径
+  }
+  return imgs;
+}
+
+// 对比并返回无用的图片数组
+function compareUnusedImage(oldArr, newArr) {
+  const delImgs = oldArr.filters(url => {
+    return newArr.indexOf(url) < 0
+  })
+  return delImgs;
+}
+
+export {
+  dateToString,
+  handleDetailTime,
+  extractMarkdownImages,
+  compareUnusedImage
+}

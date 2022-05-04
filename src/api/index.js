@@ -176,26 +176,26 @@ function deleteEditorImg(options) {
 
 // 获取草稿箱的文章
 function getArticleDraftList() {
-  return service.get('/articleDraft/list')
+  return service.get('/article-draft/list')
 }
 
 function createArticleDraft(options) {
-  return service.post('/articleDraft/create', options)
+  return service.post('/article-draft/create', options)
 }
 
 // 获取草稿详情
 function getArticleDraftDetail(id) {
-  return service.get('/articleDraft/detail/' + id)
+  return service.get('/article-draft/detail/' + id)
 }
 
 // 更新草稿数据
 function updateArticleDraft(id, options) {
-  return service.post(`/articleDraft/update/${id}`, options)
+  return service.post(`/article-draft/update/${id}`, options)
 }
 
 // 删除草稿
 function delArticleDraft(id) {
-  return service.post('/articleDraft/delete/' + id)
+  return service.post('/article-draft/delete/' + id)
 }
 
 export {

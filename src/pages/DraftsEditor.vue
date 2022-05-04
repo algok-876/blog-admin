@@ -29,7 +29,7 @@
       <mavonEditor
         class="md-editor"
         ref="editorRef"
-        v-model="formValue.md_content"
+        v-model="formValue.mdContent"
         @imgAdd="editorImgAdd"
         @imgDel="editorImgDel"
       ></mavonEditor>
@@ -109,7 +109,7 @@ async function editorImgDel(filename) {
 // 表单数据
 let formValue = reactive({
   title: "",
-  md_content: "",
+  mdContent: "",
   tag_id: "",
   description: "",
   content_img: "",
@@ -123,7 +123,7 @@ const rules = {
     message: "请输入标题",
     trigger: "blur",
   },
-  md_content: {
+  mdContent: {
     required: true,
     message: "请输入内容",
     trigger: "blur",
@@ -151,7 +151,7 @@ function back() {
 // 处理表单提交
 function handleValidateClick() {
   formValue.title = formValue.title.trim();
-  formValue.md_content = formValue.md_content.trim();
+  formValue.mdContent = formValue.mdContent.trim();
   if (!formValue.title) {
     message.error("标题不能为空格");
     return;
@@ -159,7 +159,7 @@ function handleValidateClick() {
   formRef.value.validate(async (errors) => {
     if (!errors) {
       let res = null;
-      contentImgs.value = findImgs(formValue.md_content);
+      contentImgs.value = findImgs(formValue.mdContent);
       formValue.content_img = contentImgs.value.join(",");
       res = await createArticle({
         ...formValue,
@@ -210,7 +210,7 @@ async function getDetail() {
 // 将没有发布的文章添加到草稿箱中
 async function updateDrafts() {
   if (isPublish.value) return;
-  contentImgs.value = findImgs(formValue.md_content);
+  contentImgs.value = findImgs(formValue.mdContent);
   formValue.content_img = contentImgs.value.join(",");
   await updateArticleDraft(detailId, {
     ...formValue,
@@ -218,7 +218,7 @@ async function updateDrafts() {
   });
 }
 
-// 查找出md_content中的所有图片
+// 查找出mdContent中的所有图片
 function findImgs(content) {
   let patt = new RegExp("!\\[[^\\]]*\\]\\(http://img.gkyyds.xyz/[^\\)]*", "g");
   let imgs = [];
@@ -261,7 +261,7 @@ onMounted(() => {
   getDetail();
 });
 onBeforeUnmount(() => {
-  // console.log(formValue.md_content || formValue.title || formValue.description);
+  // 卸载之前保存文章
   updateDrafts();
   delUseless();
   resetForm();

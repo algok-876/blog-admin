@@ -147,6 +147,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
             {
               onClick: () => onDetail(row),
               type: "primary",
+              size: 'small',
               style: {
                 marginRight: "3px",
               },

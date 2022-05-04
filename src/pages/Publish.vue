@@ -1,5 +1,43 @@
 <template>
   <n-form :label-width="80" :rules="rules" ref="formRef" :model="formValue">
+    <n-form-item>
+      <div class="btn-area">
+        <n-button-group>
+          <n-button
+            @click="handleValidateClick"
+            style="margin-left: 24px"
+            type="primary"
+            size="large"
+            >{{ isEdit ? "更新文章" : "发布文章" }}</n-button
+          >
+          <n-button
+            @click="
+              router.push({
+                name: 'Drafts',
+              })
+            "
+            type="warning"
+            style="margin-right: 24px"
+            v-if="!isEdit"
+            size="large"
+            >存为草稿</n-button
+          >
+          <n-button
+          @click="resetForm"
+          type="warning"
+          v-if="!isEdit"
+          size="large"
+            >重置表单</n-button
+          >
+          <n-button @click="back"
+          type="warning"
+          v-else
+          size="large"
+            >想通了, 不改了</n-button
+          >
+        </n-button-group>
+      </div>
+    </n-form-item>
     <n-grid x-gap="24" :cols="3">
       <n-gi :span="2">
         <n-form-item label="标题" path="title">
@@ -29,7 +67,7 @@
       <mavonEditor
         class="md-editor"
         ref="editorRef"
-        v-model="formValue.md_content"
+        v-model="formValue.mdContent"
         @imgAdd="editorImgAdd"
         @imgDel="editorImgDel"
       ></mavonEditor>
@@ -38,29 +76,6 @@
         v-model:value="formValue.content"
         :isEdit="isEdit"
       ></editor> -->
-    </n-form-item>
-    <n-form-item>
-      <n-button
-        @click="
-          router.push({
-            name: 'Drafts',
-          })
-        "
-        type="info"
-        style="margin-right: 24px"
-        v-if="!isEdit"
-        >草稿箱</n-button
-      >
-      <n-button @click="resetForm" type="warning" v-if="!isEdit"
-        >重置表单</n-button
-      >
-      <n-button @click="back" type="default" v-else>想通了, 不改了</n-button>
-      <n-button
-        @click="handleValidateClick"
-        style="margin-left: 24px"
-        type="primary"
-        >{{ isEdit ? "更新文章" : "发布文章" }}</n-button
-      >
     </n-form-item>
   </n-form>
 </template>
@@ -74,10 +89,7 @@ import {
   computed,
   watch,
 } from "vue";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores/user";
-import { useMessage } from "naive-ui";
-import { useRoute, useRouter } from "vue-router";
+// 获取接口数据的方法
 import {
   getTags,
   getArticleDetail,
@@ -87,6 +99,12 @@ import {
   deleteEditorImg,
   createArticleDraft,
 } from "@/api/index";
+import { extractMarkdownImages, compareUnusedImage } from "@/utils/tool";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/user";
+import { useMessage } from "naive-ui";
+import { useRoute, useRouter } from "vue-router";
+
 // 路由对象
 const route = useRoute();
 const router = useRouter();
@@ -111,7 +129,7 @@ const isEdit = ref(!!route.params.id);
 
 // function editorChange() {
 //   if (editorRef.value === "") return;
-//   console.log(findImgs(editorRef.value));
+//   console.log(extractMarkdownImages(editorRef.value));
 // }
 async function editorImgAdd(pos, $file) {
   // 第一步.将图片上传到服务器.
@@ -137,11 +155,12 @@ async function editorImgDel(filename) {
 // 表单数据
 let formValue = reactive({
   title: "",
-  md_content: "",
+  mdContent: "",
   tag_id: "",
   description: "",
   content_img: "",
 });
+
 // 编辑器中的图片
 let stateImgs = ref([]);
 let contentImgs = ref([]);
@@ -151,7 +170,7 @@ const rules = {
     message: "请输入标题",
     trigger: "blur",
   },
-  md_content: {
+  mdContent: {
     required: true,
     message: "请输入内容",
     trigger: "blur",
@@ -179,11 +198,11 @@ function back() {
 // 处理表单提交
 function handleValidateClick() {
   formValue.title = formValue.title.trim();
-  formValue.md_content = formValue.md_content.trim();
+  formValue.mdContent = formValue.mdContent.trim();
   formRef.value.validate(async (errors) => {
     if (!errors) {
       let res = null;
-      contentImgs.value = findImgs(formValue.md_content);
+      contentImgs.value = extractMarkdownImages(formValue.mdContent);
       if (contentImgs.value.length !== 0) {
         formValue.content_img = contentImgs.value.join(",");
       } else {
@@ -245,8 +264,10 @@ async function getArticle() {
 // 将没有发布的文章添加到草稿箱中
 async function createDrafts() {
   if (isPublish.value || isEdit.value) return;
-  if (formValue.md_content || formValue.title || formValue.description) {
-    formValue.content_img = findImgs(formValue.md_content).join(",");
+  if (formValue.mdContent || formValue.title || formValue.description) {
+    formValue.content_img = extractMarkdownImages(formValue.mdContent).join(
+      ","
+    );
     await createArticleDraft({
       ...formValue,
       author_id: userInfo.value._id,
@@ -254,32 +275,6 @@ async function createDrafts() {
   }
 }
 
-// 查找出md_content中的所有图片
-function findImgs(content) {
-  let patt = new RegExp("!\\[[^\\]]*\\]\\(http://img.gkyyds.xyz/[^\\)]*", "g");
-  let imgs = [];
-  imgs = content.match(patt);
-  if (!imgs) {
-    return [];
-  }
-  imgs.forEach((item, index) => {
-    imgs[index] = item.split("](")[1];
-  });
-  return imgs;
-}
-
-// 对比并返回无用的图片数组
-function getUseless(oldArr, newArr) {
-  let delImgs = [];
-  oldArr.forEach((oldItem) => {
-    let isDel = true;
-    newArr.forEach((newItem) => {
-      if (oldItem === newItem) isDel = false;
-    });
-    if (isDel) delImgs.push(oldItem);
-  });
-  return delImgs;
-}
 // 删除没有保存到文章中的残余图片
 async function delUseless() {
   let imgs = [];
@@ -287,10 +282,10 @@ async function delUseless() {
   if (!isEdit.value) return;
   if (isPublish.value) {
     // 在编辑模式下
-    imgs = getUseless(stateImgs.value, contentImgs.value);
+    imgs = compareUnusedImage(stateImgs.value, contentImgs.value);
   } else {
-    contentImgs.value = findImgs(formValue.md_content);
-    imgs = getUseless(contentImgs.value, stateImgs.value);
+    contentImgs.value = extractMarkdownImages(formValue.mdContent);
+    imgs = compareUnusedImage(contentImgs.value, stateImgs.value);
   }
   console.log("删除", imgs);
   if (imgs.length !== 0) {
@@ -306,6 +301,7 @@ onMounted(() => {
     getArticle();
   }
 });
+
 onBeforeUnmount(() => {
   delUseless();
   createDrafts();
@@ -317,5 +313,10 @@ onBeforeUnmount(() => {
 .md-editor {
   width: 100%;
   height: 420px;
+}
+.btn-area {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
 }
 </style>

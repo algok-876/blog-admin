@@ -32,6 +32,7 @@ import {
   NUploadDragger,
   NText,
   NP,
+  NButtonGroup
 } from "naive-ui";
 
 export default create({
@@ -68,5 +69,6 @@ export default create({
     NUploadDragger,
     NText,
     NP,
+    NButtonGroup
   ],
 });
