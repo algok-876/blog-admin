@@ -147,7 +147,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
             {
               onClick: () => onDetail(row),
               type: "primary",
-              size: 'small',
+              size: "small",
               style: {
                 marginRight: "3px",
               },
@@ -194,7 +194,11 @@ const onDetail = function (row) {
   showModal.value = true;
 };
 const onUpdata = function (row) {
-  router.push({ name: "ArticleUpdata", params: { id: row._id } });
+  router.push({
+    name: "ArticleUpdata",
+    params: { id: row._id },
+    query: { mode: 1 },
+  });
 };
 const onDelete = async function (row, index) {
   window.$dialog.warning({

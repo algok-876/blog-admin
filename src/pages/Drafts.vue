@@ -48,7 +48,7 @@ const router = useRouter();
 let draftsList = ref([]);
 // 编辑草稿
 function editorDrafts(id) {
-  router.push({ name: "ArticleDraft", params: { id: id } });
+  router.push({ name: "ArticleDraft", params: { id: id }, query: {mode: 2} });
 }
 // 删除草稿
 function deleteDrafts(id, index) {

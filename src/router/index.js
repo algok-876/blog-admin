@@ -99,7 +99,7 @@ const router = createRouter({
           name: 'Publish',
           component: Publish,
           meta: {
-            title: '发布文章',
+            title: '撰写文章',
             roles: ['super_admin', 'editor']
           }
         },
@@ -129,11 +129,11 @@ const router = createRouter({
           }
         },
         {
-          path: 'draft/:id',
+          path: 'draft/edit/:id',
           name: 'ArticleDraft',
-          component: DraftsEditor,
+          component: Publish,
           meta: {
-            title: '文章草稿'
+            title: '编辑草稿'
           }
         }
       ]
