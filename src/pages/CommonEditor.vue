@@ -143,6 +143,7 @@ const isPublish = ref(route.query.mode ? false : true);
 const isArticleEdit = ref(route.query.mode == 1);
 const isDraftEdit = ref(route.query.mode == 2);
 let id = route.params.id; // 当前文章或草稿 id
+let userLeaving = true; // 用户手动离开->true  通过编程导航离开->false
 
 // 按钮文本
 const btnText = computed(() => {
@@ -156,7 +157,7 @@ watch(
   () => route.query.mode,
   (newVal, oldVal) => {
     // 离开时自动保存草稿
-    if (isDraftEdit.value) updateDrafts();
+    if (isDraftEdit.value && userLeaving) updateDrafts();
     newVal == 1 ? (isArticleEdit.value = true) : (isArticleEdit.value = false);
     newVal == 2 ? (isDraftEdit.value = true) : (isDraftEdit.value = false);
     newVal ? (isPublish.value = false) : (isPublish.value = true);
@@ -250,6 +251,7 @@ function handleValidateClick() {
         content: editorRef.value.d_render,
       });
       message.success("更新成功")
+      userLeaving = false;
       router.push({
         name: "Articles",
       });
@@ -266,6 +268,9 @@ function handleValidateClick() {
       if (isDraftEdit.value) {
         delArticleDraft(route.params.id);
       }
+      userLeaving = false; // 通过编程离开页面
+      message.success("发布成功")
+      back();
       return;
     }
     back();
