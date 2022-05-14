@@ -14,8 +14,10 @@ import Drafts from '@/pages/Drafts.vue'
 import store from '@/stores'
 import { getTitle } from '@/utils/auth.js'
 import { useUserStore } from '@/stores/user'
+import { useMenuStore } from '@/stores/menu'
 import { hasRole, isAutoLogin } from '@/utils/auth'
 const userStore = useUserStore(store)
+const menuStore = useMenuStore(store)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +37,8 @@ const router = createRouter({
           component: Admins,
           meta: {
             title: '管理员用户',
-            roles: ['super_admin']
+            roles: ['super_admin'],
+            menuItemKey: 'user-manage-1'
           }
         },
         {
@@ -45,7 +48,8 @@ const router = createRouter({
           component: Users,
           meta: {
             title: '前台用户',
-            roles: ['super_admin']
+            roles: ['super_admin'],
+            menuItemKey: 'user-manage-2'
           }
         },
         {
@@ -54,7 +58,8 @@ const router = createRouter({
           name: 'Dashboard',
           component: Dashboard,
           meta: {
-            title: '仪表盘'
+            title: '仪表盘',
+            menuItemKey: 'dashboard-manage'
           }
         },
         {
@@ -63,7 +68,8 @@ const router = createRouter({
           component: Articles,
           meta: {
             title: '文章管理',
-            roles: ['super_admin', 'editor', 'auditor']
+            roles: ['super_admin', 'editor', 'auditor'],
+            menuItemKey: 'article-manage'
           }
         },
         {
@@ -72,7 +78,8 @@ const router = createRouter({
           component: CommonEditor,
           meta: {
             title: '修改文章信息',
-            roles: ['super_admin', 'editor']
+            roles: ['super_admin', 'editor'],
+            menuItemKey: ''
           }
         },
         {
@@ -81,7 +88,8 @@ const router = createRouter({
           component: Tags,
           meta: {
             title: '标签管理',
-            roles: ['super_admin', 'editor']
+            roles: ['super_admin', 'editor'],
+            menuItemKey: 'tag-manage'
           }
         },
         {
@@ -90,7 +98,8 @@ const router = createRouter({
           component: Comments,
           meta: {
             title: '评论管理',
-            roles: ['super_admin', 'editor', 'auditor']
+            roles: ['super_admin', 'editor', 'auditor'],
+            menuItemKey: 'comment-manage'
           }
         },
         {
@@ -99,7 +108,8 @@ const router = createRouter({
           component: CommonEditor,
           meta: {
             title: '撰写文章',
-            roles: ['super_admin', 'editor']
+            roles: ['super_admin', 'editor'],
+            menuItemKey: 'publish-article'
           }
         },
         {
@@ -108,7 +118,8 @@ const router = createRouter({
           component: Roles,
           meta: {
             title: '角色管理',
-            roles: ['super_admin']
+            roles: ['super_admin'],
+            menuItemKey: 'role-manage'
           }
         },
         {
@@ -116,7 +127,8 @@ const router = createRouter({
           name: 'Profile',
           component: Profile,
           meta: {
-            title: '个人中心'
+            title: '个人中心',
+            menuItemKey: ''
           }
         },
         {
@@ -124,7 +136,8 @@ const router = createRouter({
           name: 'Drafts',
           component: Drafts,
           meta: {
-            title: '草稿箱'
+            title: '草稿箱',
+            menuItemKey: 'drafts-acticle'
           }
         },
         {
@@ -132,7 +145,8 @@ const router = createRouter({
           name: 'ArticleDraft',
           component: CommonEditor,
           meta: {
-            title: '编辑草稿'
+            title: '编辑草稿',
+            menuItemKey: ''
           }
         }
       ]
@@ -200,6 +214,12 @@ router.beforeEach(async (to, from, next) => {
   let title = to.meta.title ? `${to.meta.title} - ${getTitle()}` : getTitle()
   document.title = title
   next()
+})
+
+router.afterEach((to, from, next) => {
+  if (to.name !== 'Login') {
+    menuStore.setMenuItemKey(to.meta.menuItemKey)
+  }
 })
 
 export default router

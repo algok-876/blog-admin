@@ -29,6 +29,7 @@
           :options="menuOptions"
           :collapsed="collapsed"
           :collapsed-width="70"
+          v-model:value="menuStore.menuItemKey"
         ></n-menu>
       </n-layout-sider>
       <n-layout-content
@@ -42,10 +43,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import menuOptions from "../utils/menu";
-import userAvatar from "../components/userAvatar.vue";
-const collapsed = ref(false);
+import { ref } from "vue"
+import menuOptions from "../utils/menu"
+import userAvatar from "../components/userAvatar.vue"
+import { useMenuStore } from "../stores/menu"
+const collapsed = ref(false)
+const menuStore = useMenuStore()
 </script>
 <style lang="scss" scoped>
 .n-layout-header {
