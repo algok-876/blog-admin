@@ -229,7 +229,7 @@ const onDelete = async function (row, index) {
     onPositiveClick: async () => {
       let result = await delArticle(row._id)
       if (result.code === "200") {
-        articleList.value.splice(index, 1)
+        filterArticle()
         window.$message.success("成功删除")
       }
     }
