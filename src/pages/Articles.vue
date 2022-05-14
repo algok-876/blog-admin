@@ -28,7 +28,7 @@
       :columns="columns"
       :data="articleList"
       :single-line="false"
-      :scroll-x="1600"
+      :scroll-x="1700"
     />
     <n-space :style="{ marginTop: '10px' }" justify="left">
       <n-pagination
@@ -72,14 +72,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref, h } from "vue";
-import { getArticles, delArticle } from "@/api/index.js";
-import { NTag, NButton } from "naive-ui";
-import { dateToString, handleDetailTime } from "@/utils/tool.js";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import { onMounted, ref, h } from "vue"
+import { getArticles, delArticle, updateArticleStatus } from "@/api/index.js"
+import { NTag, NButton, NSwitch } from "naive-ui"
+import { dateToString, handleDetailTime } from "@/utils/tool.js"
+import { useRouter } from "vue-router"
+const router = useRouter()
 // 文章列表
-let articleList = ref([]);
+let articleList = ref([])
 const createColumns = ({ onDetail, onUpdata, onDelete }) => {
   return [
     {
@@ -95,7 +95,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
     {
       title: "标签",
       key: "tag.name",
-      render(row) {
+      render (row) {
         return h(
           NTag,
           {
@@ -107,7 +107,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
           {
             default: () => row.tag.name,
           }
-        );
+        )
       },
     },
     {
@@ -121,8 +121,8 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
         compare: (a, b) => new Date(a.create_at) - new Date(b.create_at),
         multiple: 1,
       },
-      render(row) {
-        return dateToString(row.create_at);
+      render (row) {
+        return dateToString(row.create_at)
       },
     },
     {
@@ -132,15 +132,35 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
         compare: (a, b) => new Date(a.update_at) - new Date(b.update_at),
         multiple: 2,
       },
-      render(row) {
-        return dateToString(row.update_at);
+      render (row) {
+        return dateToString(row.update_at)
       },
+    },
+    {
+      title: "文章状态",
+      key: "status",
+      fixed: "right",
+      width: 100,
+      render (row, index) {
+        return h(
+          NSwitch,
+          {
+            value: row.off === false,
+            onUpdateValue: (value) => changeArticleStatus(row, value),
+          },
+          {
+            unchecked: () => '下架',
+            checked: () => '上架'
+          }
+        )
+      }
     },
     {
       title: "操作",
       key: "actions",
       fixed: "right",
-      render(row, index) {
+      width: 177,
+      render (row, index) {
         return [
           h(
             NButton,
@@ -184,22 +204,22 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
               default: () => "删除",
             }
           ),
-        ];
+        ]
       },
     },
-  ];
-};
+  ]
+}
 const onDetail = function (row) {
-  detailData.value = row;
-  showModal.value = true;
-};
+  detailData.value = row
+  showModal.value = true
+}
 const onUpdata = function (row) {
   router.push({
     name: "ArticleUpdata",
     params: { id: row._id },
     query: { mode: 1 },
-  });
-};
+  })
+}
 const onDelete = async function (row, index) {
   window.$dialog.warning({
     title: "确认删除",
@@ -207,29 +227,26 @@ const onDelete = async function (row, index) {
     positiveText: "删除",
     negativeText: "不确定",
     onPositiveClick: async () => {
-      let result = await delArticle(row._id);
+      let result = await delArticle(row._id)
       if (result.code === "200") {
-        articleList.value.splice(index, 1);
-        window.$message.success("成功删除");
+        articleList.value.splice(index, 1)
+        window.$message.success("成功删除")
       }
-    },
-    onNegativeClick: () => {
-      window.$message.error("已取消");
-    },
-  });
-};
+    }
+  })
+}
 const columns = createColumns({
   onDetail,
   onUpdata,
   onDelete,
-});
+})
 // 分页
-const page = ref(1);
-const pageCount = ref(0);
-const pageSize = ref(5);
+const page = ref(1)
+const pageCount = ref(0)
+const pageSize = ref(5)
 
 // 获取文章数据
-async function initArticleList(
+async function initArticleList (
   page = 1,
   limit = pageSize.value,
   startTime = 0,
@@ -242,68 +259,76 @@ async function initArticleList(
     endTime,
     keyword,
     limit,
-  });
-  articleList.value = result.data;
-  pageCount.value = result.pageCount;
+  })
+  articleList.value = result.data
+  pageCount.value = result.pageCount
 }
 
 // page发生改变时调用
-function updatePage() {
-  const { startTime, endTime } = filterDate();
+function updatePage () {
+  const { startTime, endTime } = filterDate()
   initArticleList(
     page.value,
     pageSize.value,
     startTime,
     endTime,
     keyword.value
-  );
+  )
 }
 
-function updatePageSize(size) {
-  pageSize.value = size;
-  updatePage();
+function updatePageSize (size) {
+  pageSize.value = size
+  updatePage()
 }
 
 // 清除关键字
-function clearKeyword() {
-  keyword.value = "";
-  filterArticle();
+function clearKeyword () {
+  keyword.value = ""
+  filterArticle()
 }
 
 // 浏览文章详情
-const showModal = ref(false);
-const detailData = ref({});
-const dateRange = ref(null);
-const keyword = ref("");
+const showModal = ref(false)
+const detailData = ref({})
+const dateRange = ref(null)
+const keyword = ref("")
 
 // 获取时间关键字
-function filterDate() {
-  let startTime, endTime;
+function filterDate () {
+  let startTime, endTime
   if (!dateRange.value) {
-    startTime = 0;
-    endTime = Date.now();
+    startTime = 0
+    endTime = Date.now()
   } else {
-    startTime = dateRange.value[0];
-    endTime = dateRange.value[1];
+    startTime = dateRange.value[0]
+    endTime = dateRange.value[1]
   }
-  return { startTime, endTime };
+  return { startTime, endTime }
 }
 
 // 根据日期或者关键字筛选文章数据
-function filterArticle() {
-  const { startTime, endTime } = filterDate();
-  page.value = 1;
+function filterArticle () {
+  const { startTime, endTime } = filterDate()
+  page.value = 1
   initArticleList(
     page.value,
     pageSize.value,
     startTime,
     endTime,
     keyword.value
-  );
+  )
+}
+
+// 改变文章状态 下架或上架
+function changeArticleStatus (row) {
+  console.log(typeof row.off)
+  updateArticleStatus(row._id, !row.off).then(res => {
+    row.off = !row.off // 受控组件必须改变绑定的状态，UI才会变化
+  })
 }
 
 onMounted(() => {
-  initArticleList();
+  initArticleList()
 });
 </script>
 

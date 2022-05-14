@@ -38,9 +38,16 @@ function getArticleDetail (id) {
   return service.get("/article/detail/" + id)
 }
 
-// 更新文章数据s
+// 更新文章数据
 function updateArticle (id, options) {
   return service.post(`/article/update/${id}`, options)
+}
+
+// 更改文章数据
+function updateArticleStatus (id, status) {
+  return service.post(`/article/status/${id}`, {
+    off: status
+  })
 }
 
 // 删除文章
@@ -241,4 +248,5 @@ export {
   getArticleDraftDetail,
   updateArticleDraft,
   delArticleDraft,
+  updateArticleStatus
 }
