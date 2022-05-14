@@ -3,7 +3,7 @@
     <n-layout-header bordered position="relative">
       <div class="header">
         <div class="logo">
-          <img src="../assets/logo.svg" alt="" />
+          <img src="../assets/logo.png" alt="" />
         </div>
         <h1>
           <n-gradient-text :size="28" type="success">
@@ -66,7 +66,7 @@ const menuStore = useMenuStore()
   .logo {
     margin-right: 1em;
     img {
-      width: 60px;
+      width: 70px;
     }
   }
 }
