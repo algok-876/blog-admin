@@ -28,12 +28,12 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
-import { Pulse } from "@vicons/ionicons5";
+import { defineProps, defineEmits } from "vue"
+import { Pulse } from "@vicons/ionicons5"
 const props = defineProps({
   option: {
     type: Object,
-    default() {
+    default () {
       return {
         title: "数据总数",
         chart: "data",
@@ -43,17 +43,17 @@ const props = defineProps({
           yesterday: 0,
         },
         icon: Pulse,
-      };
+      }
     },
   },
   chartType: {
     type: String,
   },
-});
-console.log(props.articleChart);
-const emits = defineEmits(["update:chart-type"]);
-function changeChart() {
-  emits("update:chart-type", props.option.chart);
+})
+console.log(props.articleChart)
+const emits = defineEmits(["update:chart-type"])
+function changeChart () {
+  emits("update:chart-type", props.option.chart)
 }
 </script>
 

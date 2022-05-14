@@ -41,30 +41,30 @@
 </template>
 
 <script setup>
-import useLogin from "../utils/useLogin";
-import { useRoute, useRouter } from "vue-router";
-import { ref } from "vue";
-const route = useRoute();
-const router = useRouter();
-const { formRef, loginModel, rules, login, reset } = useLogin();
-function onLogin() {
+import useLogin from "../utils/useLogin"
+import { useRoute, useRouter } from "vue-router"
+import { ref } from "vue"
+const route = useRoute()
+const router = useRouter()
+const { formRef, loginModel, rules, login, reset } = useLogin()
+function onLogin () {
   login(function () {
-    router.push(route.query.redirect || "/");
-    window.$message.success("登录成功");
-  });
+    router.push(route.query.redirect || "/")
+    window.$message.success("登录成功")
+  })
 }
-function welcome() {
-  const date = new Date();
-  const hour = date.getHours();
-  let words = "";
+function welcome () {
+  const date = new Date()
+  const hour = date.getHours()
+  let words = ""
   if (hour > 18 || (hour > 1 && hour < 6)) {
-    words = "Good Evening !";
+    words = "Good Evening !"
   } else if (hour > 12) {
-    words = "Good Afternoon !";
+    words = "Good Afternoon !"
   } else {
-    words = "Good Morning !";
+    words = "Good Morning !"
   }
-  return words;
+  return words
 }
 const blessings = welcome();
 </script>
