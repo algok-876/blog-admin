@@ -29,7 +29,9 @@ function getArticles (options) {
   })
 }
 
+// 新建文章
 function createArticle (options) {
+  options.tags = options.tags.join(',')
   return service.post("/article/create", options)
 }
 
@@ -40,10 +42,11 @@ function getArticleDetail (id) {
 
 // 更新文章数据
 function updateArticle (id, options) {
+  options.tags = options.tags.join(',')
   return service.post(`/article/update/${id}`, options)
 }
 
-// 更改文章数据
+// 更改文章状态
 function updateArticleStatus (id, status) {
   return service.post(`/article/status/${id}`, {
     off: status
@@ -194,6 +197,7 @@ function getArticleDraftList () {
 function createArticleDraft (options) {
   return service.post("/article/create", {
     ...options,
+    tags: options.tags.join(','),
     is_draft: true
   })
 }
@@ -205,12 +209,30 @@ function getArticleDraftDetail (id) {
 
 // 更新草稿数据
 function updateArticleDraft (id, options) {
+  options.tags = options.tags.join(',')
   return service.post(`/article/update/${id}`, options)
 }
 
 // 删除草稿
 function delArticleDraft (id) {
   return service.post(`/article/delete/${id}`)
+}
+
+// 获取网站信息
+function getSiteInformation () {
+  return service.get('/site/about')
+}
+
+// 更新网站信息
+function updateSiteInformation (info) {
+  return service.post('/site/about', {
+    params: JSON.stringify(info)
+  })
+}
+
+// 获取分类列表
+function categoryList () {
+  return service.get('/category/list')
 }
 
 export {
@@ -248,5 +270,8 @@ export {
   getArticleDraftDetail,
   updateArticleDraft,
   delArticleDraft,
-  updateArticleStatus
+  updateArticleStatus,
+  getSiteInformation,
+  updateSiteInformation,
+  categoryList
 }

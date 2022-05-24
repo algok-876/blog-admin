@@ -7,6 +7,7 @@ import Admins from '@/pages/Admins.vue'
 import Comments from '@/pages/Comments.vue'
 import CommonEditor from '@/pages/CommonEditor.vue'
 import Profile from '@/pages/Profile.vue'
+import SiteAbout from '@/pages/SiteAbout.vue'
 import Tags from '@/pages/Tags.vue'
 import Layout from '@/pages/Layout.vue'
 import Roles from '@/pages/Roles.vue'
@@ -147,6 +148,15 @@ const router = createRouter({
           meta: {
             title: '编辑草稿',
             menuItemKey: ''
+          }
+        },
+        {
+          path: 'site-about',
+          name: 'SiteAbout',
+          component: SiteAbout,
+          meta: {
+            title: '网站关系信息设置',
+            menuItemKey: 'site-about'
           }
         }
       ]

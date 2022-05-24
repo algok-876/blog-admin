@@ -34,8 +34,9 @@ import {
   NP,
   NButtonGroup,
   NCard,
-  NPopconfirm
-} from "naive-ui";
+  NPopconfirm,
+  NSlider
+} from "naive-ui"
 
 export default create({
   components: [
@@ -73,6 +74,7 @@ export default create({
     NP,
     NButtonGroup,
     NCard,
-    NPopconfirm
+    NPopconfirm,
+    NSlider
   ],
-});
+})

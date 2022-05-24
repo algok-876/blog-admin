@@ -11,7 +11,7 @@ import {
   FileTrayStackedOutline
 } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
-function renderIcon(icon) {
+function renderIcon (icon) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 const menuOptions = [
@@ -126,6 +126,18 @@ const menuOptions = [
         { default: () => '评论管理' }
       ),
     key: 'comment-manage',
+    icon: renderIcon(AtSharp)
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: '/site-about'
+        },
+        { default: () => '网站关于' }
+      ),
+    key: 'site-about',
     icon: renderIcon(AtSharp)
   }
 ]

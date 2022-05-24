@@ -74,7 +74,7 @@
 <script setup>
 import { onMounted, ref, h } from "vue"
 import { getArticles, delArticle, updateArticleStatus } from "@/api/index.js"
-import { NTag, NButton, NSwitch } from "naive-ui"
+import { NTag, NButton, NSwitch, NSpace } from "naive-ui"
 import { dateToString, handleDetailTime } from "@/utils/tool.js"
 import { useRouter } from "vue-router"
 const router = useRouter()
@@ -97,17 +97,23 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
       key: "tag.name",
       render (row) {
         return h(
-          NTag,
-          {
-            style: {
-              marginRight: "6px",
-            },
-            type: "info",
-          },
-          {
-            default: () => row.tag.name,
-          }
+          NSpace,
+          {},
+          row.tags.map(item => h(
+            NTag,
+            { type: "info" },
+            {
+              default: () => item.name
+            }
+          ))
         )
+      },
+    },
+    {
+      title: "分类",
+      key: "update_at",
+      render (row) {
+        return row.category.name
       },
     },
     {

@@ -50,7 +50,7 @@ const props = defineProps({
     type: String,
   },
 })
-console.log(props.articleChart)
+// console.log(props.articleChart)
 const emits = defineEmits(["update:chart-type"])
 function changeChart () {
   emits("update:chart-type", props.option.chart)

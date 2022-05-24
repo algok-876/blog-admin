@@ -49,7 +49,7 @@
       </div>
     </n-form-item>
     <n-grid x-gap="24" :cols="3">
-      <n-gi :span="2">
+      <n-gi :span="3">
         <n-form-item label="标题" path="title">
           <n-input
             v-model:value="articleInfo.title"
@@ -58,9 +58,18 @@
         </n-form-item>
       </n-gi>
       <n-gi>
-        <n-form-item label="标签" path="tag_id">
+        <n-form-item label="分类" path="category">
           <n-select
-            v-model:value="articleInfo.tag_id"
+            v-model:value="articleInfo.category"
+            :options="categoryOptions"
+          ></n-select>
+        </n-form-item>
+      </n-gi>
+      <n-gi span="2">
+        <n-form-item label="标签" path="tags">
+          <n-select
+            v-model:value="articleInfo.tags"
+            multiple
             :options="tagOptions"
           ></n-select>
         </n-form-item>
@@ -81,11 +90,6 @@
         @imgAdd="editorImgAdd"
         @imgDel="editorImgDel"
       ></mavonEditor>
-      <!-- <editor
-        ref="editorDiv"
-        v-model:value="articleInfo.content"
-        :isArticleEdit.value="isArticleEdit.value"
-      ></editor> -->
     </n-form-item>
   </n-form>
 </template>
@@ -115,11 +119,12 @@ import {
   getArticleDraftDetail, // 获取草稿详情
   updateArticleDraft, // 更新草稿
   delArticleDraft, // 删除草稿
+  categoryList
 } from "@/api/index"
 import { extractMarkdownImages, compareUnusedImage } from "@/utils/tool"
 import { storeToRefs } from "pinia"
 import { useUserStore } from "@/stores/user"
-import { idID, useMessage } from "naive-ui"
+import { useMessage } from "naive-ui"
 import { useRoute, useRouter } from "vue-router"
 
 // 路由对象
@@ -151,7 +156,6 @@ watch(
   () => route.query.mode, // 监听路由参数mode的变化
   (newVal, oldVal) => {
     // 自动保存
-    console.log('555')
     if (userLeaving) saveAuto()
     newVal == 1 ? (isArticleEdit.value = true) : (isArticleEdit.value = false)
     newVal == 2 ? (isDraftEdit.value = true) : (isDraftEdit.value = false)
@@ -178,7 +182,7 @@ async function editorImgDel (filename) {
   let res = await deleteEditorImg({ imgs: filename[0] })
   console.log(res)
   if (res.code === "200") {
-    window.$message.success("删除成功")
+    message.success("删除成功")
   }
 }
 
@@ -186,7 +190,8 @@ async function editorImgDel (filename) {
 let articleInfo = reactive({
   title: "",
   mdContent: "",
-  tag_id: "",
+  tags: [],
+  category: "",
   description: "",
   content_img: "",
 })
@@ -270,16 +275,23 @@ function handleValidateClick () {
   })
 }
 
-// 获取文章标签
+// 获取文章标签列表
 let tagOptions = ref([])
 async function initTagOptions () {
   const tags = await getTags()
-  tags.data.forEach((tag) => {
-    tagOptions.value.push({
-      label: tag.name,
-      value: tag._id,
-    })
-  })
+  tagOptions.value = tags.data.map(item => ({
+    label: item.name,
+    value: item._id,
+  }))
+}
+// 获取分类列表数据
+let categoryOptions = ref([])
+async function initCategoryOptions () {
+  const result = await categoryList()
+  categoryOptions.value = result.data.map(item => ({
+    label: item.name,
+    value: item._id,
+  }))
 }
 
 // 初始化表单
@@ -292,6 +304,8 @@ async function initForm () {
   Object.keys(res.data).forEach((key) => {
     articleInfo[key] = res.data[key]
   })
+  articleInfo.tags = articleInfo.tags.map(v => v._id)
+  articleInfo.category = articleInfo.category._id
   stateImgs.value = res.data.content_img.split(",")
 }
 
@@ -365,10 +379,11 @@ const autoSaveTimer = setInterval(async () => {
   await saveAuto()
   const now = new Date()
   lastSaveTime.value = `${now.getHours()}:${now.getMinutes()}`
-}, 1000 * 60 * 3) // 每三秒自动保存一次
+}, 1000 * 60 * 3) // 每三分钟自动保存一次
 
 onMounted(() => {
   initTagOptions()
+  initCategoryOptions()
   initForm()
 })
 
