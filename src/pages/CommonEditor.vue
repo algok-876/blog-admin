@@ -62,6 +62,7 @@
           <n-select
             v-model:value="articleInfo.category"
             :options="categoryOptions"
+            placeholder="请选择分类"
           ></n-select>
         </n-form-item>
       </n-gi>
@@ -71,6 +72,7 @@
             v-model:value="articleInfo.tags"
             multiple
             :options="tagOptions"
+            placeholder="请选择标签"
           ></n-select>
         </n-form-item>
       </n-gi>

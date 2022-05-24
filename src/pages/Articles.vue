@@ -99,13 +99,16 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
         return h(
           NSpace,
           {},
-          row.tags.map(item => h(
-            NTag,
-            { type: "info" },
-            {
-              default: () => item.name
-            }
-          ))
+          {
+            default: () => row.tags.map(item => h(
+              NTag,
+              { type: "info" },
+              {
+                default: () => item.name
+              }
+            ))
+          }
+
         )
       },
     },
@@ -113,7 +116,7 @@ const createColumns = ({ onDetail, onUpdata, onDelete }) => {
       title: "分类",
       key: "update_at",
       render (row) {
-        return row.category.name
+        return row.category ? row.category.name : '暂无分类'
       },
     },
     {

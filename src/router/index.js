@@ -12,6 +12,7 @@ import Tags from '@/pages/Tags.vue'
 import Layout from '@/pages/Layout.vue'
 import Roles from '@/pages/Roles.vue'
 import Drafts from '@/pages/Drafts.vue'
+import Category from '@/pages/Category.vue'
 import store from '@/stores'
 import { getTitle } from '@/utils/auth.js'
 import { useUserStore } from '@/stores/user'
@@ -91,6 +92,16 @@ const router = createRouter({
             title: '标签管理',
             roles: ['super_admin', 'editor'],
             menuItemKey: 'tag-manage'
+          }
+        },
+        {
+          path: 'category',
+          name: 'Category',
+          component: Category,
+          meta: {
+            title: '分类管理',
+            roles: ['super_admin'],
+            menuItemKey: 'category-manage'
           }
         },
         {

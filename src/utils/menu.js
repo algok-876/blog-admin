@@ -8,7 +8,9 @@ import {
   AtSharp,
   PersonCircleOutline,
   BarChart,
-  FileTrayStackedOutline
+  FileTrayStackedOutline,
+  BuildOutline,
+  FileTrayFullOutline
 } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
 function renderIcon (icon) {
@@ -97,6 +99,18 @@ const menuOptions = [
       h(
         RouterLink,
         {
+          to: '/category'
+        },
+        { default: () => '分类管理' }
+      ),
+    key: 'category-manage',
+    icon: renderIcon(FileTrayFullOutline)
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
           to: '/publish'
         },
         { default: () => '发表文章' }
@@ -138,7 +152,7 @@ const menuOptions = [
         { default: () => '网站关于' }
       ),
     key: 'site-about',
-    icon: renderIcon(AtSharp)
+    icon: renderIcon(BuildOutline)
   }
 ]
 

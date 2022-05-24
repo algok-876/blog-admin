@@ -235,6 +235,23 @@ function categoryList () {
   return service.get('/category/list')
 }
 
+// 修改分类信息
+function updateCategory (id, options) {
+  return service.post(`/category/update/${id}`, options)
+}
+
+// 删除分类项
+function deleteCategory (ids) {
+  return service.post('/category/delete', {
+    ids: ids.join(',')
+  })
+}
+
+// 新建分类
+function createCategory (options) {
+  return service.post('/category/create', options)
+}
+
 export {
   getTags,
   deleteTag,
@@ -273,5 +290,8 @@ export {
   updateArticleStatus,
   getSiteInformation,
   updateSiteInformation,
-  categoryList
+  categoryList,
+  updateCategory,
+  deleteCategory,
+  createCategory
 }
