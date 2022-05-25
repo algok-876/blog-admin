@@ -1,6 +1,7 @@
 import service from "@/api/service"
 import axios from "axios"
 import { getToken, getBaseURL } from "../utils/auth"
+import qs from 'qs'
 
 // 获取标签列表
 function getTags (options) {
@@ -236,8 +237,11 @@ function categoryList () {
 }
 
 // 修改分类信息
-function updateCategory (id, options) {
-  return service.post(`/category/update/${id}`, options)
+function updateCategory (id, name, cover) {
+  const data = new FormData()
+  data.append('name', name)
+  data.append('cover', cover)
+  return service.post(`/category/update/${id}`, data)
 }
 
 // 删除分类项
@@ -248,8 +252,11 @@ function deleteCategory (ids) {
 }
 
 // 新建分类
-function createCategory (options) {
-  return service.post('/category/create', options)
+function createCategory (name, cover) {
+  const data = new FormData()
+  data.append('name', name)
+  data.append('cover', cover)
+  return service.post('/category/create', data)
 }
 
 export {

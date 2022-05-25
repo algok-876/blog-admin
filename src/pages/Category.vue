@@ -26,6 +26,15 @@
       <n-form-item label="名称" path="name">
         <n-input v-model:value="categoryInfo.name" placeholder="输入分类名称" />
       </n-form-item>
+      <n-upload
+        :default-upload="false"
+        @update:file-list="uploadChange"
+        :max="1"
+        list-type="image"
+        :file-list="fileList"
+      >
+        <n-button>上传封面</n-button>
+      </n-upload>
     </n-form>
     <template #footer>
       <n-space justify="end">
@@ -44,13 +53,20 @@ import {
   createCategory
 } from '@/api'
 import { ref, h } from 'vue'
-import { onMounted, reactive } from '@vue/runtime-core'
+import { computed, onMounted, reactive } from '@vue/runtime-core'
 import { NButton, NPopconfirm, NSpace, useMessage } from 'naive-ui'
 import { clearForm } from '@/utils/form'
 
 const categoryData = ref([]) // 分类数据
 const formRef = ref(null)
 const message = useMessage()
+const fileList = ref([])
+const coverFile = computed(() => {
+  if (fileList.value[0]) {
+    return fileList.value[0].file
+  }
+  return ''
+})
 
 const rules = {
   name: [
@@ -71,7 +87,24 @@ const createColums = ({ onDeleteCategorySignle }) => {
     },
     {
       title: '封面',
-      key: 'cover'
+      key: 'cover',
+      render (row) {
+        if (row.cover) {
+          return h(
+            'img',
+            {
+              src: row.cover,
+              style: {
+                width: '300px',
+                height: '120px',
+                objectFit: 'cover'
+              }
+            }
+          )
+        } else {
+          return '暂无封面'
+        }
+      }
     },
     {
       title: '操作',
@@ -124,11 +157,12 @@ const createColums = ({ onDeleteCategorySignle }) => {
 const showModal = ref(false)  // 控制模态框显示与否
 const categoryInfo = reactive({
   name: '',
-  cover: ''
+  coverList: ref([])
 })
 const isAdd = ref(null)
 
 function showCreateModal () {
+  console.log(categoryInfo.coverList)
   clearForm(categoryInfo)
   isAdd.value = true
   showModal.value = true
@@ -148,10 +182,10 @@ function onPositiveClick () {
     if (err) return
     let result = null
     if (isAdd.value) {
-      result = await createCategory(categoryInfo)
+      result = await createCategory(categoryInfo.name, coverFile.value)
       categoryData.value.push(categoryInfo)
     } else {
-      result = await updateCategory(categoryInfo._id, categoryInfo)
+      result = await updateCategory(categoryInfo._id, categoryInfo.name, coverFile.value)
     }
     loadCategory()
     message.success(result.message)
@@ -173,6 +207,9 @@ const tableColumns = createColums({
   showUpdateModal
 })
 
+function uploadChange (files) {
+  fileList.value = files
+}
 
 // 加载分类信息
 async function loadCategory () {
